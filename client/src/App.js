@@ -1,25 +1,63 @@
-import logo from './logo.svg';
 import './App.css';
+import axios from 'axios'
+import { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, BrowserRouter } from 'react-router-dom';
+import LoginScreen from './authenticationPage/login';
+import StudentHome from './user/home';
+import StudentNavbar from './user/components/navBar';
+
+axios.defaults.baseURL = process.env.REACT_APP_BASE_URL || "http://localhost:1337"
 
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const handleLoginSuccess = () => {
+    setIsAuthenticated(true);
+
+
+  }
+  const handleLogout = () => {
+    setIsAuthenticated(false)
+    console.log('User has logged out');
+  }
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <div>{isAuthenticated ? (<StudentNavbar />) : (<Navigate to="/login" />)}
+
+      </div>
+      <Routes>
+        <Route
+          path="/login"
+          element={
+            isAuthenticated ? (
+              <Navigate to="/home" />
+            ) : (
+              <LoginScreen onLoginSuccess={handleLoginSuccess} />
+            )
+          }
+        />
+        <Route
+          path="/home"
+          element={
+            isAuthenticated ? (
+              <StudentHome />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+
+
+
+
+
+      </Routes>
+    </BrowserRouter>
+
+
+
+
   );
 }
-
 export default App;
