@@ -1,0 +1,20 @@
+{
+  "kind": "collectionType",
+  "collectionName": "scores",
+  "info": {
+    "singularName": "score",
+    "pluralName": "scores",
+    "displayName": "Score"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "qqwddaf": {
+      "type": "string",
+      "maxLength": 100,
+      "minLength": 1
+    }
+  }
+}
