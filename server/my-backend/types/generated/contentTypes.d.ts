@@ -372,6 +372,7 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
 export interface ApiScoreScore extends Struct.CollectionTypeSchema {
   collectionName: 'scores';
   info: {
+    description: '';
     displayName: 'Score';
     pluralName: 'scores';
     singularName: 'score';
@@ -383,15 +384,36 @@ export interface ApiScoreScore extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    FinalScore: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 30;
+          min: 0;
+        },
+        number
+      >;
+    homeworkScore: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 40;
+          min: 0;
+        },
+        number
+      >;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::score.score'> &
       Schema.Attribute.Private;
+    MidtermScore: Schema.Attribute.Integer;
     publishedAt: Schema.Attribute.DateTime;
-    qqwddaf: Schema.Attribute.String &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 100;
-        minLength: 1;
-      }>;
+    Quiz1: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 10;
+          min: 0;
+        },
+        number
+      >;
+    subjects: Schema.Attribute.Relation<'oneToMany', 'api::subject.subject'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -441,6 +463,7 @@ export interface ApiSubjectSubject extends Struct.CollectionTypeSchema {
         minLength: 1;
       }>;
     publishedAt: Schema.Attribute.DateTime;
+    score: Schema.Attribute.Relation<'manyToOne', 'api::score.score'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;

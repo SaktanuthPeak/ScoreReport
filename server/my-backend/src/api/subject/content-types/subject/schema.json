@@ -28,6 +28,12 @@
       "unique": false,
       "maxLength": 1000,
       "minLength": 1
+    },
+    "score": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::score.score",
+      "inversedBy": "subjects"
     }
   }
 }
