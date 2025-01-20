@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate, BrowserRouter } from 
 import LoginScreen from './authenticationPage/login';
 import StudentHome from './user/home';
 import StudentNavbar from './user/components/navBar';
+import { Layout } from 'antd';
 
 axios.defaults.baseURL = process.env.REACT_APP_BASE_URL || "http://localhost:1337"
 
@@ -31,14 +32,14 @@ function App() {
           path="/login"
           element={
             isAuthenticated ? (
-              <Navigate to="/home" />
+              <Navigate to="/student-home" />
             ) : (
               <LoginScreen onLoginSuccess={handleLoginSuccess} />
             )
           }
         />
         <Route
-          path="/home"
+          path="/student-home"
           element={
             isAuthenticated ? (
               <StudentHome />
