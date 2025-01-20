@@ -418,7 +418,7 @@ export interface ApiScoreScore extends Struct.CollectionTypeSchema {
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     users_permissions_user: Schema.Attribute.Relation<
-      'oneToOne',
+      'manyToOne',
       'plugin::users-permissions.user'
     >;
   };
@@ -964,7 +964,7 @@ export interface PluginUsersPermissionsUser
       'manyToOne',
       'plugin::users-permissions.role'
     >;
-    score: Schema.Attribute.Relation<'oneToOne', 'api::score.score'>;
+    scores: Schema.Attribute.Relation<'oneToMany', 'api::score.score'>;
     subjects: Schema.Attribute.Relation<'oneToMany', 'api::subject.subject'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
