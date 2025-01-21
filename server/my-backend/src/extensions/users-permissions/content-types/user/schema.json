@@ -67,9 +67,9 @@
     },
     "subjects": {
       "type": "relation",
-      "relation": "oneToMany",
+      "relation": "manyToMany",
       "target": "api::subject.subject",
-      "mappedBy": "user"
+      "mappedBy": "users"
     },
     "scores": {
       "type": "relation",

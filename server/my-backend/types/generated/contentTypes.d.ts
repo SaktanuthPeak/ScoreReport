@@ -471,8 +471,8 @@ export interface ApiSubjectSubject extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    user: Schema.Attribute.Relation<
-      'manyToOne',
+    users: Schema.Attribute.Relation<
+      'manyToMany',
       'plugin::users-permissions.user'
     >;
   };
@@ -965,7 +965,7 @@ export interface PluginUsersPermissionsUser
       'plugin::users-permissions.role'
     >;
     scores: Schema.Attribute.Relation<'oneToMany', 'api::score.score'>;
-    subjects: Schema.Attribute.Relation<'oneToMany', 'api::subject.subject'>;
+    subjects: Schema.Attribute.Relation<'manyToMany', 'api::subject.subject'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
