@@ -23,7 +23,7 @@ function getItem(label, key, icon, children) {
     };
 }
 
-const StudentNavbar = () => {
+const AdminNavbar = () => {
     const logout = () => {
         sessionStorage.clear();
         window.location.href = "/";
@@ -33,7 +33,7 @@ const StudentNavbar = () => {
         getItem(
             <Link to="/Profile">
                 <UserOutlined style={{ marginRight: "10px" }} />
-                Student Profile
+                Teacher Profile
             </Link>
         ),
         getItem(
@@ -43,7 +43,12 @@ const StudentNavbar = () => {
             </Link>,
             <FileOutlined />
         ),
-
+        getItem(
+            <Link to="/ShowFinance">
+                <ReconciliationOutlined style={{ marginRight: "10px" }} />
+                Create
+            </Link>
+        ),
 
         getItem(
             <Link to="/" onClick={logout}>
@@ -83,4 +88,4 @@ const StudentNavbar = () => {
     );
 };
 
-export default StudentNavbar;
+export default AdminNavbar;

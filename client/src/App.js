@@ -1,64 +1,76 @@
 import './App.css';
-import axios from 'axios'
-import { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, BrowserRouter } from 'react-router-dom';
+import axios from 'axios';
+import { useContext, useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import LoginScreen from './authenticationPage/login';
 import StudentHome from './user/home';
 import StudentNavbar from './user/components/navBar';
+import AdminHome from './admin/home';
 import { Layout } from 'antd';
+import { AuthContext } from './context/Auth.context';
+import ax from './conf/ax';
+import AdminNavbar from './admin/components/navBar';
 
-axios.defaults.baseURL = process.env.REACT_APP_BASE_URL || "http://localhost:1337"
+axios.defaults.baseURL = process.env.REACT_APP_BASE_URL || "http://localhost:1337";
 
-function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const handleLoginSuccess = () => {
-    setIsAuthenticated(true);
+const App = () => {
+  const { state } = useContext(AuthContext);
+  const [userRole, setUserRole] = useState(null);
+  const [nav, setNav] = useState(null);
+  const [home, setHome] = useState(null);
+  useEffect(() => {
+    if (state.isLoggedIn) {
+      const fetchRole = async () => {
+        try {
+          const result = await ax.get('users/me?populate=role');
+          const role = result.data.role.type;
+          setUserRole(role);
 
 
-  }
-  const handleLogout = () => {
-    setIsAuthenticated(false)
-    console.log('User has logged out');
-  }
+          if (role === "student") {
+            setNav(<StudentNavbar />);
+            setHome('/student-home');
+          } else {
+            setNav(<AdminNavbar />);
+            setHome('/admin-home');
+          }
+        } catch (error) {
+          console.error('Error fetching role:', error);
+        }
+      };
 
+      fetchRole();
+    }
+  }, [state.isLoggedIn]);
 
   return (
-    <BrowserRouter>
-      <div>{isAuthenticated ? (<StudentNavbar />) : (<Navigate to="/login" />)}
 
-      </div>
+    <Router>
+      <div>{state.isLoggedIn ? nav : <Navigate to="/login" />}</div>
       <Routes>
         <Route
           path="/login"
           element={
-            isAuthenticated ? (
-              <Navigate to="/student-home" />
+            state.isLoggedIn ? (
+              <Navigate to={home} />
             ) : (
-              <LoginScreen onLoginSuccess={handleLoginSuccess} />
+              <LoginScreen />
             )
           }
         />
         <Route
           path="/student-home"
           element={
-            isAuthenticated ? (
+            state.isLoggedIn ? (
               <StudentHome />
             ) : (
               <Navigate to="/login" />
             )
           }
         />
-
-
-
-
-
       </Routes>
-    </BrowserRouter>
-
-
-
-
+    </Router>
   );
-}
+};
+
 export default App;

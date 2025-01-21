@@ -1,94 +1,81 @@
-import { useEffect, useState } from 'react';
-import { Button, Form, Input, Alert, Checkbox } from 'antd';
-import axios from 'axios'
-const URL_AUTH = "/api/auth/local"
-
-export default function LoginScreen(props) {
-    const [isLoading, setIsLoading] = useState(false)
-    const [errMsg, setErrMsg] = useState(null)
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
-    const [rememberMe, setRememberMe] = useState(false)
-
-    useEffect(() => {
-        const savedUsername = localStorage.getItem('username');
-        const savedPassword = localStorage.getItem('password');
-        if (savedUsername && savedPassword) {
-            setUsername(savedUsername);
-            setPassword(savedPassword);
-            setRememberMe(true);
-
-        }
-    }, [])
-    const handleLogin = async (formData) => {
-        try {
-            setIsLoading(true)
-            setErrMsg(null)
-            const response = await axios.post(URL_AUTH, { ...formData })
-            const token = response.data.jwt
-            axios.defaults.headers.common = { 'Authorization': `bearer ${token}` }
+import React, { useContext } from 'react';
+import { Form, Input, Button, Alert, Spin } from 'antd';
+import { AuthContext } from '../context/Auth.context.js';
 
 
-            if (rememberMe) {
-                localStorage.setItem('username', formData.identifier);
-                localStorage.setItem('password', formData.password);
 
-            } else {
-                localStorage.removeItem('username')
-                localStorage.removeItem('password')
+const LoginForm = () => {
+    const { state: ContextState, login } = useContext(AuthContext);
+    const { isLoginPending, isLoggedIn, loginError } = ContextState;
 
-            }
+    const [form] = Form.useForm(); // ใช้สำหรับควบคุม Form ของ AntD
 
-            props.onLoginSuccess();
-        } catch (err) {
-            console.log(err)
-            setErrMsg(err.message)
-        } finally { setIsLoading(false) }
-    }
+    const onSubmit = (values) => {
+        const { username, password } = values;
+        login(username, password);
+        form.resetFields(); // รีเซ็ตค่าในฟอร์มหลังจากส่งข้อมูล
+    };
+
     return (
-        <div>
-            <header className='App-header'>
-                <Form
-                    onFinish={handleLogin}
-                    autoComplete="off">
-                    {errMsg &&
-                        <Form.Item>
-                            <Alert message={errMsg} type="error" />
-                        </Form.Item>
-                    }
-                    <Form.Item
-                        label="Username"
-                        name="identifier"
-                        onChange={(e) => setUsername(e.target.value)}
-                        rules={[{ required: true, }]}>
-                        <Input />
-                    </Form.Item>
-                    <Form.Item
-                        label="Password"
-                        name="password"
-                        onChange={(e) => setPassword(e.target.value)}
-                        rules={[{ required: true },]}>
-                        <Input.Password />
-                    </Form.Item>
-                    <Form.Item>
-                        <Checkbox
-                            checked={rememberMe}
-                            onChange={(e) => setRememberMe(e.target.checked)}
-                        >
-                            Remember Me
-                        </Checkbox>
-                    </Form.Item>
+        <div style={{ maxWidth: '400px', margin: '0 auto', padding: '20px' }}>
+            <Form
+                form={form}
+                name="loginForm"
+                onFinish={onSubmit}
+                layout="vertical"
+            >
+                <Form.Item
+                    label="Username"
+                    name="username"
+                    rules={[
+                        { required: true, message: 'Please enter your username' },
+                    ]}
+                >
+                    <Input placeholder="admin" />
+                </Form.Item>
 
-                    <Form.Item>
-                        <Button
-                            type="primary"
-                            htmlType="submit" loading={isLoading}>
-                            Submit
-                        </Button>
-                    </Form.Item>
-                </Form>
-            </header>
+                <Form.Item
+                    label="Password"
+                    name="password"
+                    rules={[
+                        { required: true, message: 'Please enter your password' },
+                    ]}
+                >
+                    <Input.Password placeholder="admin" />
+                </Form.Item>
+
+                <Form.Item>
+                    <Button type="primary" htmlType="submit" >
+                        Login
+                    </Button>
+                </Form.Item>
+            </Form>
+
+            {/* {isLoginPending && (
+                <div style={{ textAlign: 'center', marginTop: '10px' }}>
+                    <Spin tip="Please wait..." />
+                </div>
+            )} */}
+            {isLoggedIn && (
+                <Alert
+                    message="Success"
+                    description="You have successfully logged in."
+                    type="success"
+                    showIcon
+                    style={{ marginTop: '10px' }}
+                />
+            )}
+            {loginError && (
+                <Alert
+                    message="Login Error"
+                    description={loginError.message}
+                    type="error"
+                    showIcon
+                    style={{ marginTop: '10px' }}
+                />
+            )}
         </div>
+    );
+};
 
-    )
-}
+export default LoginForm;
