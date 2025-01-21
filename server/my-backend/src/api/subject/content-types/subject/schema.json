@@ -29,11 +29,11 @@
       "maxLength": 1000,
       "minLength": 1
     },
-    "score": {
+    "scores": {
       "type": "relation",
-      "relation": "manyToOne",
+      "relation": "oneToMany",
       "target": "api::score.score",
-      "inversedBy": "subjects"
+      "mappedBy": "subject"
     },
     "user": {
       "type": "relation",

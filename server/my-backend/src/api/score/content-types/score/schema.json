@@ -17,12 +17,6 @@
       "min": 0,
       "max": 10
     },
-    "subjects": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::subject.subject",
-      "mappedBy": "score"
-    },
     "MidtermScore": {
       "type": "integer"
     },
@@ -40,6 +34,12 @@
       "type": "relation",
       "relation": "manyToOne",
       "target": "plugin::users-permissions.user",
+      "inversedBy": "scores"
+    },
+    "subject": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::subject.subject",
       "inversedBy": "scores"
     }
   }

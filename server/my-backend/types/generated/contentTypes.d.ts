@@ -413,7 +413,7 @@ export interface ApiScoreScore extends Struct.CollectionTypeSchema {
         },
         number
       >;
-    subjects: Schema.Attribute.Relation<'oneToMany', 'api::subject.subject'>;
+    subject: Schema.Attribute.Relation<'manyToOne', 'api::subject.subject'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -467,7 +467,7 @@ export interface ApiSubjectSubject extends Struct.CollectionTypeSchema {
         minLength: 1;
       }>;
     publishedAt: Schema.Attribute.DateTime;
-    score: Schema.Attribute.Relation<'manyToOne', 'api::score.score'>;
+    scores: Schema.Attribute.Relation<'oneToMany', 'api::score.score'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
