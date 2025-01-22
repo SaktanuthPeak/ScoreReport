@@ -26,10 +26,16 @@ function getItem(label, key, icon, children) {
 const StudentNavbar = () => {
     const logout = () => {
         sessionStorage.clear();
-        window.location.href = "/";
+        window.location.href = "/login";
     };
 
     const items = [
+        getItem(
+            <Link to="/student-home">
+                <HomeOutlined style={{ marginRight: "10px" }} />
+                Home
+            </Link>
+        ),
         getItem(
             <Link to="/Profile">
                 <UserOutlined style={{ marginRight: "10px" }} />

@@ -48,3 +48,12 @@ body {
 .ant-card:hover {
   transform: scale(1.02);
 }
+.custom-card {
+  background-color: #eaf8f8;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.custom-card .ant-card-body {
+  padding: 16px;
+}
