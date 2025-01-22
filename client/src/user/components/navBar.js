@@ -37,13 +37,13 @@ const StudentNavbar = () => {
             </Link>
         ),
         getItem(
-            <Link to="/Profile">
+            <Link to="/student-home/profile">
                 <UserOutlined style={{ marginRight: "10px" }} />
                 Student Profile
             </Link>
         ),
         getItem(
-            <Link to="/Dashboard">
+            <Link to="/student-home/dashboard">
                 <DesktopOutlined style={{ marginRight: "10px" }} />
                 Dashboard
             </Link>,
@@ -52,7 +52,7 @@ const StudentNavbar = () => {
 
 
         getItem(
-            <Link to="/" onClick={logout}>
+            <Link to="/login" onClick={logout}>
                 <ApiOutlined style={{ marginRight: "10px" }} />
                 Logout
             </Link>

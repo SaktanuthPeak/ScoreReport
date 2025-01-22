@@ -9,6 +9,8 @@ import AdminNavbar from './admin/components/navBar';
 import { Layout } from 'antd';
 import { AuthContext } from './context/Auth.context';
 import ax from './conf/ax';
+import Profile from './user/profilePage';
+import WebDevReport from './user/webDevReport';
 
 const { Sider, Content } = Layout;
 
@@ -70,6 +72,26 @@ const App = () => {
                 element={
                   state.isLoggedIn ? (
                     <StudentHome />
+                  ) : (
+                    <Navigate to="/login" />
+                  )
+                }
+              />
+              <Route
+                path="/student-home/profile"
+                element={
+                  state.isLoggedIn ? (
+                    <Profile />
+                  ) : (
+                    <Navigate to="/login" />
+                  )
+                }
+              />
+              <Route
+                path="/student-home/web-development"
+                element={
+                  state.isLoggedIn ? (
+                    <WebDevReport />
                   ) : (
                     <Navigate to="/login" />
                   )

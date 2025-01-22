@@ -8,12 +8,12 @@ const LoginForm = () => {
     const { state: ContextState, login } = useContext(AuthContext);
     const { isLoginPending, isLoggedIn, loginError } = ContextState;
 
-    const [form] = Form.useForm(); // ใช้สำหรับควบคุม Form ของ AntD
+    const [form] = Form.useForm();
 
     const onSubmit = (values) => {
         const { username, password } = values;
         login(username, password);
-        form.resetFields(); // รีเซ็ตค่าในฟอร์มหลังจากส่งข้อมูล
+        form.resetFields();
     };
 
     return (
