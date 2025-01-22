@@ -1,42 +1,90 @@
 import React, { useEffect, useState } from "react";
-import { Card, Row, Col, Tag } from "antd";
-import './user.css'
-import { Navigate, useNavigate } from "react-router-dom";
+import { Table, Card } from "antd";
 import ax from "../conf/ax";
 
-
-
 const WebDevReport = () => {
-    const [allScore, setAllScore] = useState(null);
+    const [allScores, setAllScores] = useState([]);
+    const [currentUser, setCurrentUser] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchSubjectDetails = async () => {
+        const fetchScoresAndUser = async () => {
             try {
-                const result = await ax.get('/scores')
-                const ScoreData = result.data.data
-                console.log(ScoreData);
-                setAllScore(ScoreData);
+                const userResult = await ax.get('/users/me');
+                const userData = userResult.data;
+                setCurrentUser(userData);
 
+                const scoresResult = await ax.get('/scores?populate=*');
+                const scoresData = scoresResult.data.data;
+
+                const filteredScores = scoresData.filter(
+                    (score) => score.users_permissions_user.username === userData.username &&
+                        score.subject.NameOfsubJect === "web-dev"
+                );
+
+                setAllScores(filteredScores);
+                setLoading(false);
             } catch (error) {
-                console.error("Error fetching scores:", error);
+                console.error("Error fetching scores or user data:", error);
+                setLoading(false);
             }
-        }
+        };
 
-        fetchSubjectDetails();
+        fetchScoresAndUser();
+    }, []);
 
-    }, [])
+
+    const columns = [
+        {
+            title: "Category",
+            dataIndex: "key",
+            key: "key",
+        },
+        {
+            title: "Score (%)",
+            dataIndex: "value",
+            key: "value",
+        },
+    ];
 
     return (
         <div style={{ padding: "20px", backgroundColor: "#f0f2f5" }}>
-            <h1>This is WebDevReport</h1>
-            {allScore ? (
-                <>
-                    <h1>Final score got: {allScore.FinalScore}/40 </h1>
-                    <h1>Midterm Score got: {allScore.MidtermScore}/40</h1>
-                    <h1>Quiz score got: {allScore.Quiz1}/10</h1>
-                </>
-            ) : (
+            <h1>Web Development Report</h1>
+            {loading ? (
                 <h1>Loading scores...</h1>
+            ) : (
+                <div>
+                    {allScores.length > 0 ? (
+                        allScores.map((score, index) => {
+
+                            const scoreData = Object.keys(score)
+                                .filter((key) => typeof score[key] === "number" && key !== "id")
+                                .map((key) => ({
+                                    key,
+                                    value: score[key],
+                                }));
+
+                            return (
+                                <Card
+                                    key={index}
+                                    title={`User: ${score.users_permissions_user.username}`}
+                                    style={{ marginBottom: "20px" }}
+                                >
+                                    <p>Email: {score.users_permissions_user.email}</p>
+                                    <h3>Scores:</h3>
+                                    <Table
+                                        columns={columns}
+                                        dataSource={scoreData}
+                                        pagination={false}
+                                        bordered
+                                    />
+                                </Card>
+                            );
+                        })
+                    ) : (
+                        <h1>No scores found for the current user.</h1>
+                    )}
+                </div>
             )}
         </div>
     );
