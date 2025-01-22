@@ -31,6 +31,12 @@ const AdminNavbar = () => {
 
     const items = [
         getItem(
+            <Link to="/admin-home">
+                <UserOutlined style={{ marginRight: "10px" }} />
+                home
+            </Link>
+        ),
+        getItem(
             <Link to="/Profile">
                 <UserOutlined style={{ marginRight: "10px" }} />
                 Teacher Profile

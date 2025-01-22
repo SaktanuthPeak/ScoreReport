@@ -11,6 +11,8 @@ import { AuthContext } from './context/Auth.context';
 import ax from './conf/ax';
 import Profile from './user/profilePage';
 import WebDevReport from './user/webDevReport';
+import AdminHomePage from './admin/home';
+import AdminWebDevReport from './admin/webDevReport';
 
 const { Sider, Content } = Layout;
 
@@ -92,6 +94,27 @@ const App = () => {
                 element={
                   state.isLoggedIn ? (
                     <WebDevReport />
+                  ) : (
+                    <Navigate to="/login" />
+                  )
+                }
+              />
+              {/* admin page */}
+              <Route
+                path="/admin-home"
+                element={
+                  state.isLoggedIn ? (
+                    <AdminHomePage />
+                  ) : (
+                    <Navigate to="/login" />
+                  )
+                }
+              />
+              <Route
+                path="/admin-home/web-development"
+                element={
+                  state.isLoggedIn ? (
+                    <AdminWebDevReport />
                   ) : (
                     <Navigate to="/login" />
                   )
