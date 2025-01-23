@@ -1,19 +1,16 @@
 //About.js
 import React, { useState, useEffect } from "react";
 import dayjs from "dayjs";
-import axios from "axios";
-import { Layout } from "antd";
-import { StepForwardOutlined, UserOutlined } from "@ant-design/icons";
-import { Avatar, Space, Button, Flex } from "antd";
-import { Link } from "react-router-dom";
+import { Layout, Avatar, Button, Card, Row, Col, Typography, Spin, Space } from "antd";
+import { UserOutlined } from "@ant-design/icons";
 import EditProfile from "./components/editProfile";
-import create from "@ant-design/icons/lib/components/IconFont";
 import ax from "../conf/ax";
 
+const { Content } = Layout;
+const { Title, Text } = Typography;
 
-const { Header, Content, Footer, Sider } = Layout;
 const Profile = () => {
-    const [user, setUser] = useState({});
+    const [user, setUser] = useState(null);
     const [openEdit, setOpenEdit] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -31,7 +28,7 @@ const Profile = () => {
             const response = await ax.get("users/me");
             setUser(response.data);
         } catch (err) {
-            console.log(err);
+            console.error(err);
         } finally {
             setIsLoading(false);
         }
@@ -46,61 +43,61 @@ const Profile = () => {
             setIsLoading(true);
             const response = await ax.put("user/me", item);
             fetchItems();
-            const { id, firstname, lastname, username, email } = response.data;
-            console.log("respone", response.data);
-            setUser([
-                {
-                    id: id,
-                    key: id,
-                    firstname: firstname,
-                    lastname: lastname,
-                    username: username,
-                    email: email,
-                },
-            ]);
         } catch (err) {
-            console.log(err);
+            console.error(err);
         } finally {
             setIsLoading(false);
         }
     };
-    console.log(user);
-    if (!user) return <div>Loading...</div>;
+
+    if (isLoading || !user) {
+        return (
+            <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+                <Spin size="large" />
+            </div>
+        );
+    }
+
     return (
         <Layout>
-
-            <Content>
-                <div
-                    style={{ padding: "20px", margin: "50px" }}
-                    className="profile-page"
-                >
-                    <center>
-                        <div>
+            <Content style={{ margin: "24px", padding: "24px", backgroundColor: "#fff" }}>
+                <Card style={{ maxWidth: 600, margin: "0 auto" }}>
+                    <Row gutter={[16, 16]} justify="center" align="middle">
+                        <Col span={24} style={{ textAlign: "center" }}>
                             <Avatar size={128} icon={<UserOutlined />} />
-                            <p>Profile</p>
-                        </div>
-                    </center>
+                            <Title level={3} style={{ marginTop: 16 }}>
+                                {user.firstname} {user.lastname}
+                            </Title>
+                            <Text type="secondary">Username: {user.username}</Text>
+                        </Col>
 
-                    <div style={{ paddingLeft: "50px" }}>
-                        <p>Firstname : {user.firstname}</p>
-                        <p>Lastname : {user.lastname}</p>
-                        <p>username : {user.username}</p>
-                        <p>Email : {user.email}</p>
-                        <p>Create : {dayjs(user.createdAt).format("DD/MM/YYYY")}</p>
-                        <Flex justify="flex-end">
-                            <Button onClick={openForm}>Edit</Button>
-                        </Flex>
-                    </div>
-                    {openEdit && (
-                        <EditProfile
-                            defaultValue={user}
-                            closeForm={closeForm}
-                            onSubmit={handleEditItem}
-                        />
-                    )}
-                </div>
+                        <Col span={24}>
+                            <Space direction="vertical" size="middle" style={{ width: "100%" }}>
+                                <Text>
+                                    <b>Email:</b> {user.email}
+                                </Text>
+                                <Text>
+                                    <b>Account Created:</b> {dayjs(user.createdAt).format("DD/MM/YYYY")}
+                                </Text>
+                            </Space>
+                        </Col>
+
+                        <Col span={24} style={{ textAlign: "center" }}>
+                            <Button type="primary" onClick={openForm}>
+                                Edit Profile
+                            </Button>
+                        </Col>
+                    </Row>
+                </Card>
+
+                {openEdit && (
+                    <EditProfile
+                        defaultValue={user}
+                        closeForm={closeForm}
+                        onSubmit={handleEditItem}
+                    />
+                )}
             </Content>
-            <Space direction="vertical" size={16}></Space>
         </Layout>
     );
 };
