@@ -76,6 +76,10 @@
       "relation": "oneToMany",
       "target": "api::score.score",
       "mappedBy": "users_permissions_user"
+    },
+    "UID": {
+      "type": "string",
+      "unique": true
     }
   }
 }

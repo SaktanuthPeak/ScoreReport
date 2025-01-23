@@ -41,6 +41,14 @@
       "relation": "manyToOne",
       "target": "api::subject.subject",
       "inversedBy": "scores"
+    },
+    "sID": {
+      "type": "string",
+      "unique": true
+    },
+    "UID": {
+      "type": "string",
+      "unique": true
     }
   }
 }

@@ -413,7 +413,9 @@ export interface ApiScoreScore extends Struct.CollectionTypeSchema {
         },
         number
       >;
+    sID: Schema.Attribute.String & Schema.Attribute.Unique;
     subject: Schema.Attribute.Relation<'manyToOne', 'api::subject.subject'>;
+    UID: Schema.Attribute.String & Schema.Attribute.Unique;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -966,6 +968,7 @@ export interface PluginUsersPermissionsUser
     >;
     scores: Schema.Attribute.Relation<'oneToMany', 'api::score.score'>;
     subjects: Schema.Attribute.Relation<'manyToMany', 'api::subject.subject'>;
+    UID: Schema.Attribute.String & Schema.Attribute.Unique;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
