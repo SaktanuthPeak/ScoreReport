@@ -80,6 +80,12 @@
     "UID": {
       "type": "string",
       "unique": true
+    },
+    "firstname": {
+      "type": "string"
+    },
+    "lastname": {
+      "type": "string"
     }
   }
 }
