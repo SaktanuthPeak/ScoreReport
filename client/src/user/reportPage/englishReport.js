@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Table, Card } from "antd";
-import ax from "../conf/ax";
+import ax from "../../conf/ax";
 
-const WebDevReport = () => {
+const EnglishReport = () => {
     const [allScores, setAllScores] = useState([]);
     const [currentUser, setCurrentUser] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -19,7 +19,7 @@ const WebDevReport = () => {
 
                 const filteredScores = scoresData.filter(
                     (score) => score.users_permissions_user.username === userData.username &&
-                        score.subject.NameOfsubJect === "web-dev"
+                        score.subject.NameOfsubJect === "english"
                 );
 
                 setAllScores(filteredScores);
@@ -49,7 +49,7 @@ const WebDevReport = () => {
 
     return (
         <div style={{ padding: "20px", backgroundColor: "#f0f2f5" }}>
-            <h1>Web Development Report</h1>
+            <h1>English Report</h1>
             {loading ? (
                 <h1>Loading scores...</h1>
             ) : (
@@ -90,4 +90,4 @@ const WebDevReport = () => {
     );
 };
 
-export default WebDevReport;
+export default EnglishReport;

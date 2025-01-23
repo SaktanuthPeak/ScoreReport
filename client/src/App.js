@@ -10,9 +10,11 @@ import { Layout } from 'antd';
 import { AuthContext } from './context/Auth.context';
 import ax from './conf/ax';
 import Profile from './user/profilePage';
-import WebDevReport from './user/webDevReport';
+import WebDevReport from './user/reportPage/webDevReport';
 import AdminHomePage from './admin/home';
 import AdminWebDevReport from './admin/webDevReport';
+import DsaReport from './user/reportPage/dsaReport';
+import EnglishReport from './user/reportPage/englishReport';
 
 const { Sider, Content } = Layout;
 
@@ -60,6 +62,12 @@ const App = () => {
           <Content style={{ padding: '20px' }}>
             <Routes>
               <Route
+                path=""
+                element={
+                  <Navigate to="/login" />
+                }
+              />
+              <Route
                 path="/login"
                 element={
                   state.isLoggedIn ? (
@@ -94,6 +102,26 @@ const App = () => {
                 element={
                   state.isLoggedIn ? (
                     <WebDevReport />
+                  ) : (
+                    <Navigate to="/login" />
+                  )
+                }
+              />
+              <Route
+                path="/student-home/data-structure-algo"
+                element={
+                  state.isLoggedIn ? (
+                    <DsaReport />
+                  ) : (
+                    <Navigate to="/login" />
+                  )
+                }
+              />
+              <Route
+                path="/student-home/english"
+                element={
+                  state.isLoggedIn ? (
+                    <EnglishReport />
                   ) : (
                     <Navigate to="/login" />
                   )
