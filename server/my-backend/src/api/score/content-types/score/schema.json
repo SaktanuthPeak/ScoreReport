@@ -13,20 +13,20 @@
   "pluginOptions": {},
   "attributes": {
     "Quiz1": {
-      "type": "integer",
+      "type": "float",
       "min": 0,
       "max": 10
     },
     "MidtermScore": {
-      "type": "integer"
+      "type": "float"
     },
     "FinalScore": {
-      "type": "integer",
+      "type": "float",
       "min": 0,
       "max": 30
     },
     "homeworkScore": {
-      "type": "integer",
+      "type": "float",
       "min": 0,
       "max": 40
     },
