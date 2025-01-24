@@ -415,7 +415,7 @@ export interface ApiScoreScore extends Struct.CollectionTypeSchema {
       >;
     sID: Schema.Attribute.String;
     subject: Schema.Attribute.Relation<'manyToOne', 'api::subject.subject'>;
-    UID: Schema.Attribute.String & Schema.Attribute.Unique;
+    UID: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
