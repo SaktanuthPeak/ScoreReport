@@ -413,7 +413,7 @@ export interface ApiScoreScore extends Struct.CollectionTypeSchema {
         },
         number
       >;
-    sID: Schema.Attribute.String & Schema.Attribute.Unique;
+    sID: Schema.Attribute.String;
     subject: Schema.Attribute.Relation<'manyToOne', 'api::subject.subject'>;
     UID: Schema.Attribute.String & Schema.Attribute.Unique;
     updatedAt: Schema.Attribute.DateTime;
@@ -441,22 +441,7 @@ export interface ApiSubjectSubject extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    IDsubject: Schema.Attribute.Integer &
-      Schema.Attribute.SetMinMax<
-        {
-          max: 10000;
-          min: 1;
-        },
-        number
-      >;
-    KEYsubj: Schema.Attribute.Integer &
-      Schema.Attribute.SetMinMax<
-        {
-          max: 10000;
-          min: 1;
-        },
-        number
-      >;
+    IDsubject: Schema.Attribute.String & Schema.Attribute.Unique;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
