@@ -93,7 +93,7 @@ const AdminWebDevReport = () => {
   useEffect(() => {
     const fetchStudent = async () => {
       try {
-        const studentScore = await ax.get("/scores");
+        const studentScore = await ax.get("/scores?pagination[limit]=100");
         const studentData = studentScore.data.data;
         console.log(studentData);
         const filterStudents = studentData.filter(

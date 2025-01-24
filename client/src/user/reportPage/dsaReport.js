@@ -1,41 +1,56 @@
 import React, { useEffect, useState } from "react";
-import { Table, Card } from "antd";
+import {
+    Table,
+    Card,
+    Typography,
+    Spin,
+    Alert,
+    Row,
+    Col,
+    Statistic
+} from "antd";
+import { UserOutlined, MailOutlined, NumberOutlined } from "@ant-design/icons";
 import ax from "../../conf/ax";
+
+const { Title, Text } = Typography;
+
+const getGrade = (totalScore) => {
+    if (totalScore >= 80) return "A";
+    if (totalScore >= 75) return "B+";
+    if (totalScore >= 70) return "B";
+    if (totalScore >= 65) return "C+";
+    if (totalScore >= 60) return "C";
+    if (totalScore >= 50) return "D";
+    return "E";
+};
 
 const DsaReport = () => {
     const [allScores, setAllScores] = useState([]);
     const [currentUser, setCurrentUser] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [firstName, setFirstName] = useState(null);
-    const [lastName, setlastName] = useState(null);
-    const [uid, setUid] = useState(null);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         const fetchScoresAndUser = async () => {
             try {
                 const userResult = await ax.get('/users/me');
                 const userData = userResult.data;
-                const userFirstName = userData.firstname
-                const userLastName = userData.lastname
-                const userUid = userData.UID
 
-                setCurrentUser(userData);
-                setFirstName(userFirstName);
-                setlastName(userLastName);
-                setUid(userUid)
-
-                const scoresResult = await ax.get('/scores?populate=*');
+                const scoresResult = await ax.get('/scores?populate=*&pagination[limit]=100');
                 const scoresData = scoresResult.data.data;
 
                 const filteredScores = scoresData.filter(
-                    (score) => score.users_permissions_user.username === userData.username &&
-                        score.subject.NameOfsubJect === "data-structure"
+                    (score) =>
+                        score.users_permissions_user?.username === userData.username &&
+                        score.subject?.NameOfsubJect === "data-structure"
                 );
 
+                setCurrentUser(userData);
                 setAllScores(filteredScores);
                 setLoading(false);
             } catch (error) {
                 console.error("Error fetching scores or user data:", error);
+                setError(error);
                 setLoading(false);
             }
         };
@@ -43,59 +58,130 @@ const DsaReport = () => {
         fetchScoresAndUser();
     }, []);
 
-
     const columns = [
         {
             title: "Category",
             dataIndex: "key",
             key: "key",
+            render: (text) => <Text strong>{text}</Text>
         },
         {
             title: "Score (%)",
             dataIndex: "value",
             key: "value",
+            render: (value) => (
+                <Text
+
+                    strong
+                >
+                    {value}%
+                </Text>
+            )
         },
     ];
 
+    if (loading) {
+        return (
+            <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '100vh'
+            }}>
+                <Spin size="large" tip="Loading scores..." />
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <Alert
+                message="Error"
+                description="Unable to fetch user scores"
+                type="error"
+                showIcon
+            />
+        );
+    }
+
     return (
-        <div style={{ padding: "20px", backgroundColor: "#f0f2f5" }}>
-            <h1>Data Structure Report</h1>
-            {loading ? (
-                <h1>Loading scores...</h1>
+        <div style={{
+            padding: "24px",
+            backgroundColor: "#f0f2f5",
+            minHeight: '100vh'
+        }}>
+            <Title level={2} style={{ textAlign: 'center', marginBottom: '24px' }}>
+                Data Structure Report
+            </Title>
+
+            {allScores.length > 0 ? (
+                allScores.map((score, index) => {
+                    const scoreData = Object.keys(score)
+                        .filter((key) => typeof score[key] === "number" && key !== "id")
+                        .map((key) => ({
+                            key,
+                            value: score[key],
+                        }));
+
+                    const totalScore = scoreData.reduce((sum, item) => sum + item.value, 0);
+                    const grade = getGrade(totalScore);
+
+                    return (
+                        <Card
+                            key={index}
+                            title={
+                                <div>
+                                    <UserOutlined style={{ marginRight: 8 }} />
+                                    {`คุณ${currentUser.firstname} ${currentUser.lastname}`}
+                                </div>
+                            }
+                            extra={
+                                <Statistic
+                                    title="Total Score"
+                                    value={`${totalScore}% (${grade})`}
+                                    suffix=""
+                                />
+                            }
+                            style={{
+                                marginBottom: "24px",
+                                boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+                            }}
+                        >
+                            <Row gutter={16}>
+                                <Col span={12}>
+                                    <Text strong><MailOutlined style={{ marginRight: 8 }} />
+                                        Email:
+                                    </Text>
+                                    <Text>{score.users_permissions_user.email}</Text>
+                                </Col>
+                                <Col span={12}>
+                                    <Text strong><NumberOutlined style={{ marginRight: 8 }} />
+                                        รหัสนักศึกษา:
+                                    </Text>
+                                    <Text>{currentUser.UID}</Text>
+                                </Col>
+                            </Row>
+
+                            <div style={{ marginTop: '24px' }}>
+                                <Title level={4}>Scores</Title>
+                                <Table
+                                    columns={columns}
+                                    dataSource={scoreData}
+                                    pagination={false}
+                                    bordered
+                                    size="middle"
+                                />
+                            </div>
+                        </Card>
+                    );
+                })
             ) : (
-                <div>
-                    {allScores.length > 0 ? (
-                        allScores.map((score, index) => {
-
-                            const scoreData = Object.keys(score)
-                                .filter((key) => typeof score[key] === "number" && key !== "id")
-                                .map((key) => ({
-                                    key,
-                                    value: score[key],
-                                }));
-
-                            return (
-                                <Card
-                                    key={index}
-                                    title={`คุณ${firstName} ${lastName}`}
-                                    style={{ marginBottom: "20px" }}
-                                >
-                                    <p>Email: {score.users_permissions_user.email}</p>
-                                    <p>รหัสนักศึกษา : {uid}</p>
-                                    <h3>Scores:</h3>
-                                    <Table
-                                        columns={columns}
-                                        dataSource={scoreData}
-                                        pagination={false}
-                                        bordered
-                                    />
-                                </Card>
-                            );
-                        })
-                    ) : (
-                        <h1>No scores found for the current user.</h1>
-                    )}
-                </div>
+                <Alert
+                    message="No Scores"
+                    description="No scores found for the current user."
+                    type="info"
+                    showIcon
+                />
             )}
         </div>
     );
