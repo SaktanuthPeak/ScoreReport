@@ -1,4 +1,4 @@
-import { Card, Row, Col, Typography } from "antd";
+import { Card, Row, Col, Typography, Button } from "antd";
 import {
   BookOutlined,
   FileTextOutlined,
@@ -9,12 +9,18 @@ import "./admin.css";
 import ShowReport from "./components/showReport";
 import ax from "../conf/ax";
 import React, { useEffect, useState } from "react";
+import * as XLSX from "xlsx";
 const { Title } = Typography;
 
 const AdminWebDevReport = () => {
   const [student, setStudent] = useState([]);
   const [loading, setLoading] = useState(true);
   const [transactionData, setTransactionData] = useState([]);
+
+  const [excelFile, setExcelFile] = useState(null);
+  const [typeError, setTypeError] = useState(null);
+  const [excelData, setExcelData] = useState(null);
+
   const reportCards = [
     {
       title: "Quiz (20%)",
@@ -50,6 +56,40 @@ const AdminWebDevReport = () => {
     window.location.href = route;
   };
 
+  const handleFile = (e) => {
+    const fileTypes = [
+      "application/vnd.ms-excel",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "text/csv",
+    ];
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      if (selectedFile && fileTypes.includes(selectedFile.type)) {
+        setTypeError(null);
+        const reader = new FileReader();
+        reader.readAsArrayBuffer(selectedFile);
+        reader.onload = (e) => {
+          setExcelFile(e.target.result);
+        };
+      } else {
+        setTypeError("File dosent correct");
+        setExcelFile(null);
+      }
+    } else {
+      console.log("Select File");
+    }
+  };
+
+  const handleFileSubmit = (e) => {
+    e.preventDefault();
+    if (excelFile !== null) {
+      const workBook = XLSX.read(excelFile, { type: "buffer" });
+      const workSheetName = workBook.SheetNames[0];
+      const workSheet = workBook.Sheets[workSheetName];
+      const data = XLSX.utils.sheet_to_json(workSheet);
+      setExcelData(data.slice(0, 10));
+    }
+  };
   useEffect(() => {
     const fetchStudent = async () => {
       try {
@@ -90,6 +130,50 @@ const AdminWebDevReport = () => {
         minHeight: "100vh",
       }}
     >
+      <div className="wrapper">
+        <h1>put excel and show excel</h1>
+
+        {/* form */}
+        <form className="form-group custom-form" onSubmit={handleFileSubmit}>
+          <input
+            type="file"
+            className="form-control"
+            required
+            onChange={handleFile}
+          ></input>
+          <button type="summit" className="btn btn-success btn-md">
+            UPLOAD
+          </button>
+        </form>
+
+        {/* view data */}
+        <div className="viewer">
+          {excelData ? (
+            <div>
+              <table>
+                <thead>
+                  <tr>
+                    {Object.keys(excelData[0]).map((key) => (
+                      <th key={key}>{key}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {excelData.map((individualExcelData, index) => (
+                    <tr key={index}>
+                      {Object.keys(individualExcelData).map((key) => (
+                        <td key={key}>{individualExcelData[key]}</td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div>Data didnt load</div>
+          )}
+        </div>
+      </div>
       <div style={{ textAlign: "center", marginBottom: "20px" }}>
         <Title level={2}>Web Design & Developer Module</Title>
         <Title level={4} style={{ color: "#666" }}>
