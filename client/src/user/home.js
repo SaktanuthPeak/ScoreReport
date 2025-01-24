@@ -30,12 +30,15 @@ const courses = [
 ];
 
 const Homepage = () => {
-    const [name, setName] = useState(null)
+    const [firstname, setFirstName] = useState(null)
+    const [lastname, setLastName] = useState(null)
     useEffect(() => {
         const fetchName = async () => {
             const result = await ax.get('users/me')
-            const username = result.data.username
-            setName(username)
+            const Firstname = result.data.firstname
+            const Lastname = result.data.lastname
+            setFirstName(Firstname)
+            setLastName(Lastname)
         }
         fetchName()
     }, [])
@@ -47,7 +50,7 @@ const Homepage = () => {
     return (
         <div style={{ padding: "20px", backgroundColor: "#f0f2f5" }}>
             <h1>
-                Hello {name}
+                สวัสดีคุณ{firstname} {lastname}
             </h1>
             <Row gutter={[16, 16]}>
                 {courses.map((course, index) => (

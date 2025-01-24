@@ -17,6 +17,7 @@ const WebDevReport = () => {
                 const scoresResult = await ax.get('/scores?populate=*');
                 const scoresData = scoresResult.data.data;
                 console.log(scoresData)
+                console.log(scoresData.subject.documentId)
                 const filteredScores = scoresData.filter(
                     (score) => score.users_permissions_user.username === userData.username &&
                         score.subject.NameOfsubJect === "web-dev"

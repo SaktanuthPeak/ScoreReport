@@ -6,13 +6,23 @@ const DsaReport = () => {
     const [allScores, setAllScores] = useState([]);
     const [currentUser, setCurrentUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [firstName, setFirstName] = useState(null);
+    const [lastName, setlastName] = useState(null);
+    const [uid, setUid] = useState(null);
 
     useEffect(() => {
         const fetchScoresAndUser = async () => {
             try {
                 const userResult = await ax.get('/users/me');
                 const userData = userResult.data;
+                const userFirstName = userData.firstname
+                const userLastName = userData.lastname
+                const userUid = userData.UID
+
                 setCurrentUser(userData);
+                setFirstName(userFirstName);
+                setlastName(userLastName);
+                setUid(userUid)
 
                 const scoresResult = await ax.get('/scores?populate=*');
                 const scoresData = scoresResult.data.data;
@@ -67,10 +77,11 @@ const DsaReport = () => {
                             return (
                                 <Card
                                     key={index}
-                                    title={`User: ${score.users_permissions_user.username}`}
+                                    title={`คุณ${firstName} ${lastName}`}
                                     style={{ marginBottom: "20px" }}
                                 >
                                     <p>Email: {score.users_permissions_user.email}</p>
+                                    <p>รหัสนักศึกษา : {uid}</p>
                                     <h3>Scores:</h3>
                                     <Table
                                         columns={columns}

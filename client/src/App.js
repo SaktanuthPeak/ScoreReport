@@ -12,10 +12,11 @@ import ax from './conf/ax';
 import Profile from './user/profilePage';
 import WebDevReport from './user/reportPage/webDevReport';
 import AdminHomePage from './admin/home';
-import AdminWebDevReport from './admin/webDevReport';
 import DsaReport from './user/reportPage/dsaReport';
+import AdminWebDevReport from './admin/webDevReport';
+import AdminDsaReport from './admin/dsaReport';
 import EnglishReport from './user/reportPage/englishReport';
-
+import AdminEnglishReport from './admin/englishReport';
 const { Sider, Content } = Layout;
 
 axios.defaults.baseURL = process.env.REACT_APP_BASE_URL || "http://localhost:1337";
@@ -143,6 +144,26 @@ const App = () => {
                 element={
                   state.isLoggedIn ? (
                     <AdminWebDevReport />
+                  ) : (
+                    <Navigate to="/login" />
+                  )
+                }
+              />
+              <Route
+                path="/admin-home/data-structure-algo"
+                element={
+                  state.isLoggedIn ? (
+                    <AdminDsaReport />
+                  ) : (
+                    <Navigate to="/login" />
+                  )
+                }
+              />
+              <Route
+                path="/admin-home/english"
+                element={
+                  state.isLoggedIn ? (
+                    <AdminEnglishReport />
                   ) : (
                     <Navigate to="/login" />
                   )
