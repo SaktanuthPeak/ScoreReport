@@ -12,16 +12,6 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "IDsubject": {
-      "type": "integer",
-      "max": 10000,
-      "min": 1
-    },
-    "KEYsubj": {
-      "type": "integer",
-      "min": 1,
-      "max": 10000
-    },
     "NameOfsubJect": {
       "type": "string",
       "required": false,
@@ -40,6 +30,10 @@
       "relation": "manyToMany",
       "target": "plugin::users-permissions.user",
       "inversedBy": "subjects"
+    },
+    "IDsubject": {
+      "type": "string",
+      "unique": true
     }
   }
 }
