@@ -58,12 +58,22 @@ const DsaReport = () => {
         fetchScoresAndUser();
     }, []);
 
+    const keyMapping = {
+        Quiz1: "Quiz (20 %)",
+        homeworkScore: "Homework (20 %)",
+        MidtermScore: "Midterm Exam (30 %)",
+        FinalScore: "Final Exam (30 %)",
+
+
+    };
+    const sortOrder = ["Quiz1", "homeworkScore", "MidtermScore", "FinalScore"];
     const columns = [
         {
             title: "Category",
             dataIndex: "key",
             key: "key",
-            render: (text) => <Text strong>{text}</Text>
+            render: (key) => (
+                <Text strong>{keyMapping[key] || key}</Text>)
         },
         {
             title: "Score (%)",
@@ -121,7 +131,7 @@ const DsaReport = () => {
                         .map((key) => ({
                             key,
                             value: score[key],
-                        }));
+                        })).sort((a, b) => sortOrder.indexOf(a.key) - sortOrder.indexOf(b.key));;
 
                     const totalScore = scoreData.reduce((sum, item) => sum + item.value, 0);
                     const grade = getGrade(totalScore);
