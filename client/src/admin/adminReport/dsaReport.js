@@ -22,28 +22,28 @@ const AdminDsaReport = () => {
     const reportCards = [
         {
             title: "Quiz (20%)",
-            description: "กรอกคะเเนนควิส",
+            description: "คลิกเพื่ออัปโหลดคะเเนน Quiz",
             color: "blue",
             icon: <BookOutlined />,
             scoreType: 'Quiz',
         },
         {
             title: "Homework (20%)",
-            description: "กรอกคะเเนนการบ้าน",
+            description: "คลิกเพื่ออัปโหลดคะเเนน Homework",
             color: "green",
             icon: <FileTextOutlined />,
             scoreType: 'Homework',
         },
         {
             title: "Midterm (30%)",
-            description: "กรอกคะเเนนสอบกลางภาค",
+            description: "คลิกเพื่ออัปโหลดคะเเนน Midterm",
             color: "purple",
             icon: <CalendarOutlined />,
             scoreType: 'Midterm',
         },
         {
             title: "Final (30%)",
-            description: "กรอกคะเเนนสอบปลายภาค",
+            description: "คลิกเพื่ออัปโหลดคะเเนน Final",
             color: "red",
             icon: <FormOutlined />,
             scoreType: 'Final',
@@ -90,9 +90,9 @@ const AdminDsaReport = () => {
     return (
         <div style={{ padding: "20px", minHeight: "100vh" }}>
             <div style={{ textAlign: "center", marginBottom: "20px" }}>
-                <Title level={2}>Web Design & Developer Module</Title>
+                <Title level={2}>Data Structure & Algorithm Module</Title>
                 <Title level={4} style={{ color: "#666" }}>
-                    240-124
+                    240-123
                 </Title>
             </div>
             <Row gutter={[16, 16]} style={{ paddingBottom: "1em" }}>

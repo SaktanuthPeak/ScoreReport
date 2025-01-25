@@ -91,7 +91,7 @@ const DsaUploadModal = ({
                 console.log('Searching for username:', username);
 
                 try {
-                    const student = await ax.get(`/scores?filters[UID]=${username}&filters[sID]=240-124`);
+                    const student = await ax.get(`/scores?filters[UID]=${username}&filters[sID]=240-123`);
 
                     console.log('Student API Response:', student.data.data);
 

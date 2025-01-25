@@ -45,7 +45,7 @@ const AdminHomePage = () => {
     }
 
     return (
-        <div style={{ padding: "20px", }}>
+        <div style={{ padding: "30px", }}>
             <h1>
                 Hello {name}
             </h1>

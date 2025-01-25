@@ -135,8 +135,8 @@ const WebDevReport = () => {
                             }
                             extra={
                                 <Statistic
-                                    title="Total Score"
-                                    value={`${totalScore}% (${grade})`}
+
+                                    value={`Total Score : ${totalScore}% ( ${grade} )`}
                                     suffix=""
                                 />
                             }

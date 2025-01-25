@@ -53,7 +53,7 @@ const Homepage = () => {
     }
 
     return (
-        <div style={{ padding: "20px", backgroundColor: "#f0f2f5" }}>
+        <div style={{ padding: "30px" }}>
             <h1>
                 สวัสดีคุณ{firstname} {lastname}
             </h1>

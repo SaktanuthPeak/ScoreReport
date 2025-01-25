@@ -9,22 +9,22 @@ export default function ShowReport(props) {
       key: "UID",
     },
     {
-      title: "Quiz1",
+      title: "Quiz (20%)",
       dataIndex: "Quiz1",
       key: "Quiz1",
     },
     {
-      title: "Homework",
+      title: "Homework (20%)",
       dataIndex: "homeworkScore",
       key: "homeworkScore",
     },
     {
-      title: "Midterm Score",
+      title: "Midterm Score (30%)",
       dataIndex: "MidtermScore",
       key: "MidtermScore",
     },
     {
-      title: "Final Score",
+      title: "Final Score (30%)",
       dataIndex: "FinalScore",
       key: "FinalScore",
     },

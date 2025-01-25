@@ -21,28 +21,28 @@ const AdminWebDevReport = () => {
   const reportCards = [
     {
       title: "Quiz (20%)",
-      description: "กรอกคะเเนนควิส",
+      description: "คลิกเพื่ออัปโหลดคะเเนน Quiz",
       color: "blue",
       icon: <BookOutlined />,
       scoreType: 'Quiz',
     },
     {
       title: "Homework (20%)",
-      description: "กรอกคะเเนนการบ้าน",
+      description: "คลิกเพื่ออัปโหลดคะเเนน Homework",
       color: "green",
       icon: <FileTextOutlined />,
       scoreType: 'Homework',
     },
     {
       title: "Midterm (30%)",
-      description: "กรอกคะเเนนสอบกลางภาค",
+      description: "คลิกเพื่ออัปโหลดคะเเนน Midterm",
       color: "purple",
       icon: <CalendarOutlined />,
       scoreType: 'Midterm',
     },
     {
       title: "Final (30%)",
-      description: "กรอกคะเเนนสอบปลายภาค",
+      description: "คลิกเพื่ออัปโหลดคะเเนน Final",
       color: "red",
       icon: <FormOutlined />,
       scoreType: 'Final',
