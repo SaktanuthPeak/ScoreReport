@@ -56,6 +56,34 @@ const AdminWebDevReport = () => {
     window.location.href = route;
   };
 
+  const fetchStudent = async () => {
+    try {
+      const studentScore = await ax.get("/scores?pagination[limit]=100");
+      const studentData = studentScore.data.data;
+      const filterStudents = studentData.filter(
+        (user) => user.sID === "240-124"
+      );
+      setStudent(filterStudents);
+      setTransactionData(
+        filterStudents
+          .map((row) => ({
+            id: row.id,
+            key: row.id,
+            UID: row.UID,
+            Quiz1: row.Quiz1,
+            homeworkScore: row.homeworkScore,
+            MidtermScore: row.MidtermScore,
+            FinalScore: row.FinalScore,
+          }))
+          .sort((a, b) => a.UID.localeCompare(b.UID))
+      );
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching scores or user data:", error);
+      setLoading(false);
+    }
+  };
+
   const handleFile = (e) => {
     const fileTypes = [
       "application/vnd.ms-excel",
@@ -80,49 +108,53 @@ const AdminWebDevReport = () => {
     }
   };
 
-  const handleFileSubmit = (e) => {
+  const handleFileSubmit = async (e) => {
     e.preventDefault();
+
     if (excelFile !== null) {
-      const workBook = XLSX.read(excelFile, { type: "buffer" });
-      const workSheetName = workBook.SheetNames[0];
-      const workSheet = workBook.Sheets[workSheetName];
-      const data = XLSX.utils.sheet_to_json(workSheet);
-      setExcelData(data.slice(0, 10));
+      try {
+        const workBook = XLSX.read(excelFile, { type: "buffer" });
+        const workSheetName = workBook.SheetNames[0];
+        const workSheet = workBook.Sheets[workSheetName];
+        const data = XLSX.utils.sheet_to_json(workSheet);
+        setExcelData(data.slice(0, 10));
+
+        const updatePromises = data.map(async (inComeStudentData) => {
+          const studentData = student.find(
+            (student) =>
+              +student.UID === inComeStudentData.username &&
+              student.sID === "240-124"
+          );
+          console.log("++++++++++++++++++++++++++++++++++++", studentData);
+          if (studentData) {
+            const updatePayload = {
+              Quiz1: inComeStudentData.Quiz1,
+            };
+
+            const response = await ax.put(`/scores/${studentData.documentId}`, {
+              data: updatePayload,
+            });
+            console.log("Update response:", response.data);
+          }
+          fetchStudent();
+        });
+
+        await Promise.all(updatePromises);
+        setLoading(false);
+        console.log("All updates completed.");
+      } catch (error) {
+        console.error(
+          "Error updating student data:",
+          error.response ? error.response.data : error.message
+        );
+        setLoading(false);
+      }
     }
   };
   useEffect(() => {
-    const fetchStudent = async () => {
-      try {
-        const studentScore = await ax.get("/scores?pagination[limit]=100");
-        const studentData = studentScore.data.data;
-        console.log(studentData);
-        const filterStudents = studentData.filter(
-          (user) => user.sID === "240-124"
-        );
-
-        console.log(filterStudents);
-        setTransactionData(
-          filterStudents.map((row) => ({
-            id: row.id,
-            key: row.id,
-            UID: row.UID,
-            Quiz1: row.Quiz1,
-            homeworkScore: row.homeworkScore,
-            MidtermScore: row.MidtermScore,
-            FinalScore: row.FinalScore,
-          }))
-            .sort((a, b) => a.UID.localeCompare(b.UID))
-        );
-
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching scores or user data:", error);
-        setLoading(false);
-      }
-    };
-
     fetchStudent();
   }, []);
+
   return (
     <div
       style={{
