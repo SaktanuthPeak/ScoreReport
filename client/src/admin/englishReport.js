@@ -7,10 +7,16 @@ import {
     FormOutlined
 } from '@ant-design/icons';
 import "./admin.css"
-
+import ShowReport from './components/showReport';
+import ax from '../conf/ax';
+import { useEffect, useState } from "react";
 const { Title } = Typography;
 
 const AdminEnglishReport = () => {
+    const [student, setStudent] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [transactionData, setTransactionData] = useState([]);
+
     const reportCards = [
         {
             title: 'Quiz (20%)',
@@ -45,7 +51,39 @@ const AdminEnglishReport = () => {
     const handleCardClick = (route) => {
         window.location.href = route;
     };
+    useEffect(() => {
+        const fetchStudent = async () => {
+            try {
+                const studentScore = await ax.get("/scores?pagination[limit]=100");
+                const studentData = studentScore.data.data;
+                console.log(studentData);
+                const filterStudents = studentData.filter(
+                    (user) => user.sID === "890-104"
+                );
 
+                console.log(filterStudents);
+                setTransactionData(
+                    filterStudents.map((row) => ({
+                        id: row.id,
+                        key: row.id,
+                        UID: row.UID,
+                        Quiz1: row.Quiz1,
+                        homeworkScore: row.homeworkScore,
+                        MidtermScore: row.MidtermScore,
+                        FinalScore: row.FinalScore,
+                    }))
+                        .sort((a, b) => a.UID.localeCompare(b.UID))
+                );
+
+                setLoading(false);
+            } catch (error) {
+                console.error("Error fetching scores or user data:", error);
+                setLoading(false);
+            }
+        };
+
+        fetchStudent();
+    }, []);
     return (
         <div style={{
             padding: "20px",
@@ -56,7 +94,7 @@ const AdminEnglishReport = () => {
                 <Title level={2}>English in the Digital World</Title>
                 <Title level={4} style={{ color: '#666' }}>890-104G1</Title>
             </div>
-            <Row gutter={[16, 16]}>
+            <Row gutter={[16, 16]} style={{ paddingBottom: "1em" }}>
                 {reportCards.map((card) => (
                     <Col key={card.title} xs={24} sm={12} lg={6}>
                         <Card
@@ -109,6 +147,9 @@ const AdminEnglishReport = () => {
                     </Col>
                 ))}
             </Row>
+            <div>
+                <ShowReport data={transactionData} />
+            </div>
         </div>
     );
 };

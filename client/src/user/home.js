@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Card, Row, Col, Tag } from "antd";
 import './user.css'
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import ax from "../conf/ax";
-
 
 const courses = [
     {
@@ -32,16 +31,22 @@ const courses = [
 const Homepage = () => {
     const [firstname, setFirstName] = useState(null)
     const [lastname, setLastName] = useState(null)
+
     useEffect(() => {
         const fetchName = async () => {
-            const result = await ax.get('users/me')
-            const Firstname = result.data.firstname
-            const Lastname = result.data.lastname
-            setFirstName(Firstname)
-            setLastName(Lastname)
+            try {
+                const result = await ax.get('users/me')
+                const Firstname = result.data.firstname
+                const Lastname = result.data.lastname
+                setFirstName(Firstname)
+                setLastName(Lastname)
+            } catch (error) {
+                console.error("Failed to fetch user name", error)
+            }
         }
         fetchName()
     }, [])
+
     const navigate = useNavigate();
     const handleCardClick = (coursekey) => {
         navigate(`/student-home/${coursekey}`)
@@ -52,18 +57,30 @@ const Homepage = () => {
             <h1>
                 สวัสดีคุณ{firstname} {lastname}
             </h1>
-            <Row gutter={[16, 16]}>
+            <Row gutter={[16, 16]} style={{ display: 'flex', flexWrap: 'wrap' }}>
                 {courses.map((course, index) => (
-                    <Col xs={24} sm={24} md={12} lg={8} key={index}>
-                        <Card className="custom-card"
+                    <Col
+                        xs={24}
+                        sm={24}
+                        md={8}
+                        key={index}
+                        style={{
+                            width: '100%',
+                            maxWidth: '33.33%',
+                            padding: '0 8px',
+                            marginBottom: '16px'
+                        }}
+                    >
+                        <Card
+                            className="custom-card"
                             style={{
                                 backgroundColor: "#eaf8f8",
                                 borderRadius: "10px",
                                 boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-                                cursor: "pointer"
+                                cursor: "pointer",
+                                height: '100%'
                             }}
                             onClick={() => handleCardClick(course.key)}
-
                         >
                             <h3 style={{ margin: 0 }}>{course.code}</h3>
                             <p style={{ margin: "8px 0", fontWeight: "bold" }}>{course.title}</p>

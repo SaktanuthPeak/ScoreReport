@@ -111,6 +111,7 @@ const AdminWebDevReport = () => {
             MidtermScore: row.MidtermScore,
             FinalScore: row.FinalScore,
           }))
+            .sort((a, b) => a.UID.localeCompare(b.UID))
         );
 
         setLoading(false);
