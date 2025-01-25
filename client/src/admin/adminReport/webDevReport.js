@@ -56,13 +56,27 @@ const AdminWebDevReport = () => {
       const filterStudents = studentData.filter(
         (user) => user.sID === "240-124"
       );
+      const userResponse = await ax.get("/users");
+      const userData = userResponse.data;
+      console.log(userData)
+      const userMap = userData.reduce((acc, user) => {
+        acc[user.UID] = {
+          firstname: user.firstname,
+          lastname: user.lastname,
+        };
+        return acc;
+      }, {});
+
       setStudent(filterStudents);
+
       setTransactionData(
         filterStudents
           .map((row) => ({
             id: row.id,
             key: row.id,
             UID: row.UID,
+            firstname: userMap[row.UID]?.firstname || "Unknown",
+            lastname: userMap[row.UID]?.lastname || "Unknown",
             Quiz1: row.Quiz1,
             homeworkScore: row.homeworkScore,
             MidtermScore: row.MidtermScore,

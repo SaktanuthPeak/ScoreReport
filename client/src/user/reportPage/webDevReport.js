@@ -73,7 +73,7 @@ const WebDevReport = () => {
 
                     strong
                 >
-                    {value}%
+                    {value}
                 </Text>
             )
         },

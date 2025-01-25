@@ -37,7 +37,7 @@ const AdminNavbar = () => {
             </Link>
         ),
         getItem(
-            <Link to="/Profile">
+            <Link to="/admin-home/profile">
                 <UserOutlined style={{ marginRight: "10px" }} />
                 Teacher Profile
             </Link>
@@ -48,12 +48,6 @@ const AdminNavbar = () => {
                 Dashboard
             </Link>,
             <FileOutlined />
-        ),
-        getItem(
-            <Link to="/ShowFinance">
-                <ReconciliationOutlined style={{ marginRight: "10px" }} />
-                Create
-            </Link>
         ),
 
         getItem(

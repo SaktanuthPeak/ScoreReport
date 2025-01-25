@@ -17,6 +17,8 @@ import AdminHomePage from './admin/home';
 import AdminDsaReport from './admin/adminReport/dsaReport';
 import AdminWebDevReport from './admin/adminReport/webDevReport';
 import AdminEnglishReport from './admin/adminReport/englishReport';
+import AdminProfile from './admin/profilePage';
+
 const { Sider, Content } = Layout;
 
 axios.defaults.baseURL = process.env.REACT_APP_BASE_URL || "http://localhost:1337";
@@ -169,6 +171,17 @@ const App = () => {
                   )
                 }
               />
+              <Route
+                path="/admin-home/profile"
+                element={
+                  state.isLoggedIn ? (
+                    <AdminProfile />
+                  ) : (
+                    <Navigate to="/login" />
+                  )
+                }
+              />
+
             </Routes>
           </Content>
         </Layout>
