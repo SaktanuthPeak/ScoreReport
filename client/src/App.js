@@ -11,12 +11,12 @@ import { AuthContext } from './context/Auth.context';
 import ax from './conf/ax';
 import Profile from './user/profilePage';
 import WebDevReport from './user/reportPage/webDevReport';
-import AdminHomePage from './admin/home';
 import DsaReport from './user/reportPage/dsaReport';
-import AdminWebDevReport from './admin/webDevReport';
-import AdminDsaReport from './admin/dsaReport';
 import EnglishReport from './user/reportPage/englishReport';
-import AdminEnglishReport from './admin/englishReport';
+import AdminHomePage from './admin/home';
+import AdminDsaReport from './admin/adminReport/dsaReport';
+import AdminWebDevReport from './admin/adminReport/webDevReport';
+import AdminEnglishReport from './admin/adminReport/englishReport';
 const { Sider, Content } = Layout;
 
 axios.defaults.baseURL = process.env.REACT_APP_BASE_URL || "http://localhost:1337";

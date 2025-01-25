@@ -24,7 +24,7 @@ const getGrade = (totalScore) => {
     return "E";
 };
 
-const EnglishReport = () => {
+const AdminEnglishReport = () => {
     const [allScores, setAllScores] = useState([]);
     const [currentUser, setCurrentUser] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -107,7 +107,7 @@ const EnglishReport = () => {
     return (
         <div style={{
             padding: "24px",
-            backgroundColor: "#f0f2f5",
+
             minHeight: '100vh'
         }}>
             <Title level={2} style={{ textAlign: 'center', marginBottom: '24px' }}>
@@ -187,4 +187,4 @@ const EnglishReport = () => {
     );
 };
 
-export default EnglishReport;
+export default AdminEnglishReport;

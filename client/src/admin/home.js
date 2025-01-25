@@ -45,7 +45,7 @@ const AdminHomePage = () => {
     }
 
     return (
-        <div style={{ padding: "20px", backgroundColor: "#f0f2f5" }}>
+        <div style={{ padding: "20px", }}>
             <h1>
                 Hello {name}
             </h1>
@@ -66,7 +66,7 @@ const AdminHomePage = () => {
                         <Card
                             className="custom-card"
                             style={{
-                                backgroundColor: "#eaf8f8",
+
                                 borderRadius: "10px",
                                 boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                                 cursor: "pointer",
@@ -85,7 +85,7 @@ const AdminHomePage = () => {
                     </Col>
                 ))}
             </Row>
-        </div>
+        </div >
     );
 };
 
