@@ -6,6 +6,7 @@ import {
   FileTextOutlined,
   CalendarOutlined,
   FormOutlined,
+  ProfileOutlined,
 } from "@ant-design/icons";
 import WebdevUploadModal from "../components/webdevUploadModal";
 import ShowReport from "../components/showReport";
@@ -16,7 +17,7 @@ const AdminWebDevReport = () => {
   const [loading, setLoading] = useState(true);
   const [transactionData, setTransactionData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
-  const [currentScoreType, setCurrentScoreType] = useState('');
+  const [currentScoreType, setCurrentScoreType] = useState("");
 
   const reportCards = [
     {
@@ -24,28 +25,35 @@ const AdminWebDevReport = () => {
       description: "คลิกเพื่ออัปโหลดคะเเนน Quiz",
       color: "blue",
       icon: <BookOutlined />,
-      scoreType: 'Quiz',
+      scoreType: "Quiz",
     },
     {
       title: "Homework (20%)",
       description: "คลิกเพื่ออัปโหลดคะเเนน Homework",
       color: "green",
       icon: <FileTextOutlined />,
-      scoreType: 'Homework',
+      scoreType: "Homework",
     },
     {
       title: "Midterm (30%)",
       description: "คลิกเพื่ออัปโหลดคะเเนน Midterm",
       color: "purple",
       icon: <CalendarOutlined />,
-      scoreType: 'Midterm',
+      scoreType: "Midterm",
     },
     {
       title: "Final (30%)",
       description: "คลิกเพื่ออัปโหลดคะเเนน Final",
       color: "red",
       icon: <FormOutlined />,
-      scoreType: 'Final',
+      scoreType: "Final",
+    },
+    {
+      title: "All score (100%)",
+      description: "คลิกเพื่ออัปโหลดทุกคะแนนคะเเนน",
+      color: " #C70039 ",
+      icon: <ProfileOutlined />,
+      scoreType: "allScore",
     },
   ];
 
@@ -58,7 +66,7 @@ const AdminWebDevReport = () => {
       );
       const userResponse = await ax.get("/users");
       const userData = userResponse.data;
-      console.log(userData)
+      console.log(userData);
       const userMap = userData.reduce((acc, user) => {
         acc[user.UID] = {
           firstname: user.firstname,
@@ -108,9 +116,16 @@ const AdminWebDevReport = () => {
           240-124
         </Title>
       </div>
-      <Row gutter={[16, 16]} style={{ paddingBottom: "1em" }}>
+      <Row
+        gutter={[16, 16]}
+        style={{
+          paddingBottom: "1rem",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
         {reportCards.map((card) => (
-          <Col key={card.title} xs={24} sm={12} lg={6}>
+          <Col key={card.title}>
             <Card
               hoverable
               onClick={() => handleCardClick(card.scoreType)}
@@ -129,16 +144,15 @@ const AdminWebDevReport = () => {
             >
               <div
                 style={{
-                  backgroundColor: `${card.color}1a`,
                   color: card.color,
                   borderRadius: "50%",
-                  width: "80px",
-                  height: "80px",
+                  width: "13.2rem",
+                  height: "5rem",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  marginBottom: "15px",
-                  fontSize: "36px",
+                  marginBottom: "0.5rem",
+                  fontSize: "3rem",
                 }}
               >
                 {card.icon}
@@ -165,6 +179,7 @@ const AdminWebDevReport = () => {
           </Col>
         ))}
       </Row>
+
       <div>
         <ShowReport data={transactionData} />
       </div>
