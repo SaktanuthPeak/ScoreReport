@@ -15,13 +15,10 @@ import { Layout } from "antd";
 import { AuthContext } from "./context/Auth.context";
 import ax from "./conf/ax";
 import Profile from "./user/profilePage";
-import WebDevReport from "./user/reportPage/webDevReport";
-import DsaReport from "./user/reportPage/dsaReport";
-import EnglishReport from "./user/reportPage/englishReport";
 import AdminHomePage from "./admin/home";
 import AdminProfile from "./admin/profilePage";
 import AdminScoreReport from "./admin/adminReport/adminScoreReport";
-
+import ReportScore from "./user/reportPage/reportScore";
 const { Sider, Content } = Layout;
 
 axios.defaults.baseURL =
@@ -88,31 +85,15 @@ const App = () => {
                 }
               />
               <Route
+                path="/student-home/:courseId"
+                element={
+                  state.isLoggedIn ? <ReportScore /> : <Navigate to="/login" />
+                }
+              />
+              <Route
                 path="/student-home/profile"
                 element={
                   state.isLoggedIn ? <Profile /> : <Navigate to="/login" />
-                }
-              />
-              <Route
-                path="/student-home/web-development"
-                element={
-                  state.isLoggedIn ? <WebDevReport /> : <Navigate to="/login" />
-                }
-              />
-              <Route
-                path="/student-home/data-structure-algo"
-                element={
-                  state.isLoggedIn ? <DsaReport /> : <Navigate to="/login" />
-                }
-              />
-              <Route
-                path="/student-home/english"
-                element={
-                  state.isLoggedIn ? (
-                    <EnglishReport />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
                 }
               />
               {/* admin page */}
