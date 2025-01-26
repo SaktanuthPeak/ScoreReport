@@ -438,10 +438,13 @@ export interface ApiSubjectSubject extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
+    code: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    credit: Schema.Attribute.Integer;
     IDsubject: Schema.Attribute.String & Schema.Attribute.Unique;
+    key: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -455,6 +458,8 @@ export interface ApiSubjectSubject extends Struct.CollectionTypeSchema {
       }>;
     publishedAt: Schema.Attribute.DateTime;
     scores: Schema.Attribute.Relation<'oneToMany', 'api::score.score'>;
+    section: Schema.Attribute.String;
+    title: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;

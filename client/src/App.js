@@ -1,27 +1,31 @@
-import './App.css';
-import axios from 'axios';
-import { useContext, useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import LoginScreen from './authenticationPage/login';
-import StudentHome from './user/home';
-import StudentNavbar from './user/components/navBar';
-import AdminNavbar from './admin/components/navBar';
-import { Layout } from 'antd';
-import { AuthContext } from './context/Auth.context';
-import ax from './conf/ax';
-import Profile from './user/profilePage';
-import WebDevReport from './user/reportPage/webDevReport';
-import DsaReport from './user/reportPage/dsaReport';
-import EnglishReport from './user/reportPage/englishReport';
-import AdminHomePage from './admin/home';
-import AdminDsaReport from './admin/adminReport/dsaReport';
-import AdminWebDevReport from './admin/adminReport/webDevReport';
-import AdminEnglishReport from './admin/adminReport/englishReport';
-import AdminProfile from './admin/profilePage';
+import "./App.css";
+import axios from "axios";
+import { useContext, useState, useEffect } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import LoginScreen from "./authenticationPage/login";
+import StudentHome from "./user/home";
+import StudentNavbar from "./user/components/navBar";
+import AdminNavbar from "./admin/components/navBar";
+import { Layout } from "antd";
+import { AuthContext } from "./context/Auth.context";
+import ax from "./conf/ax";
+import Profile from "./user/profilePage";
+import WebDevReport from "./user/reportPage/webDevReport";
+import DsaReport from "./user/reportPage/dsaReport";
+import EnglishReport from "./user/reportPage/englishReport";
+import AdminHomePage from "./admin/home";
+import AdminProfile from "./admin/profilePage";
+import AdminScoreReport from "./admin/adminReport/adminScoreReport";
 
 const { Sider, Content } = Layout;
 
-axios.defaults.baseURL = process.env.REACT_APP_BASE_URL || "http://localhost:1337";
+axios.defaults.baseURL =
+  process.env.REACT_APP_BASE_URL || "http://localhost:1337";
 
 const App = () => {
   const { state } = useContext(AuthContext);
@@ -33,19 +37,19 @@ const App = () => {
     if (state.isLoggedIn) {
       const fetchRole = async () => {
         try {
-          const result = await ax.get('users/me?populate=role');
+          const result = await ax.get("users/me?populate=role");
           const role = result.data.role.type;
           setUserRole(role);
 
           if (role === "student") {
             setNav(<StudentNavbar />);
-            setHome('/student-home');
+            setHome("/student-home");
           } else {
             setNav(<AdminNavbar />);
-            setHome('/admin-home');
+            setHome("/admin-home");
           }
         } catch (error) {
-          console.error('Error fetching role:', error);
+          console.error("Error fetching role:", error);
         }
       };
 
@@ -55,69 +59,50 @@ const App = () => {
 
   return (
     <Router>
-      <Layout style={{ minHeight: '100vh' }}>
+      <Layout style={{ minHeight: "100vh" }}>
         {state.isLoggedIn && (
-          <Sider style={{ position: 'fixed', height: '100vh', backgroundColor: '#001529' }}>
+          <Sider
+            style={{
+              position: "fixed",
+              height: "100vh",
+              backgroundColor: "#001529",
+            }}
+          >
             {nav}
           </Sider>
         )}
         <Layout style={{ marginLeft: state.isLoggedIn ? 200 : 0 }}>
-          <Content style={{ padding: '20px' }}>
+          <Content style={{ padding: "20px" }}>
             <Routes>
-              <Route
-                path=""
-                element={
-                  <Navigate to="/login" />
-                }
-              />
+              <Route path="" element={<Navigate to="/login" />} />
               <Route
                 path="/login"
                 element={
-                  state.isLoggedIn ? (
-                    <Navigate to={home} />
-                  ) : (
-                    <LoginScreen />
-                  )
+                  state.isLoggedIn ? <Navigate to={home} /> : <LoginScreen />
                 }
               />
               <Route
                 path="/student-home"
                 element={
-                  state.isLoggedIn ? (
-                    <StudentHome />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
+                  state.isLoggedIn ? <StudentHome /> : <Navigate to="/login" />
                 }
               />
               <Route
                 path="/student-home/profile"
                 element={
-                  state.isLoggedIn ? (
-                    <Profile />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
+                  state.isLoggedIn ? <Profile /> : <Navigate to="/login" />
                 }
               />
               <Route
                 path="/student-home/web-development"
                 element={
-                  state.isLoggedIn ? (
-                    <WebDevReport />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
+                  state.isLoggedIn ? <WebDevReport /> : <Navigate to="/login" />
                 }
               />
               <Route
                 path="/student-home/data-structure-algo"
                 element={
-                  state.isLoggedIn ? (
-                    <DsaReport />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
+                  state.isLoggedIn ? <DsaReport /> : <Navigate to="/login" />
                 }
               />
               <Route
@@ -142,30 +127,10 @@ const App = () => {
                 }
               />
               <Route
-                path="/admin-home/web-development"
+                path="/admin-home/:courseId"
                 element={
                   state.isLoggedIn ? (
-                    <AdminWebDevReport />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-              <Route
-                path="/admin-home/data-structure-algo"
-                element={
-                  state.isLoggedIn ? (
-                    <AdminDsaReport />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-              <Route
-                path="/admin-home/english"
-                element={
-                  state.isLoggedIn ? (
-                    <AdminEnglishReport />
+                    <AdminScoreReport />
                   ) : (
                     <Navigate to="/login" />
                   )
@@ -174,14 +139,9 @@ const App = () => {
               <Route
                 path="/admin-home/profile"
                 element={
-                  state.isLoggedIn ? (
-                    <AdminProfile />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
+                  state.isLoggedIn ? <AdminProfile /> : <Navigate to="/login" />
                 }
               />
-
             </Routes>
           </Content>
         </Layout>

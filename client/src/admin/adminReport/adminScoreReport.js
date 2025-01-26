@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Card, Row, Col, Typography } from "antd";
+import ax from "../../conf/ax";
+import { useParams } from "react-router-dom";
 import {
   BookOutlined,
   FileTextOutlined,
@@ -7,83 +9,69 @@ import {
   FormOutlined,
   ProfileOutlined,
 } from "@ant-design/icons";
-import ax from "../../conf/ax";
-import ShowReport from "../components/showReport";
-import DsaUploadModal from "../components/dsaUploadModal";
+import WebdevUploadModal from "../components/uploadModal";
+import ShowReportT from "../components/showReportT";
 
 const { Title } = Typography;
-
-const AdminDsaReport = () => {
+const reportCards = [
+  {
+    title: "Quiz (20%)",
+    description: "คลิกเพื่ออัปโหลดคะเเนน Quiz",
+    color: "blue",
+    icon: <BookOutlined />,
+    scoreType: "Quiz",
+  },
+  {
+    title: "Homework (20%)",
+    description: "คลิกเพื่ออัปโหลดคะเเนน Homework",
+    color: "green",
+    icon: <FileTextOutlined />,
+    scoreType: "Homework",
+  },
+  {
+    title: "Midterm (30%)",
+    description: "คลิกเพื่ออัปโหลดคะเเนน Midterm",
+    color: "purple",
+    icon: <CalendarOutlined />,
+    scoreType: "Midterm",
+  },
+  {
+    title: "Final (30%)",
+    description: "คลิกเพื่ออัปโหลดคะเเนน Final",
+    color: "red",
+    icon: <FormOutlined />,
+    scoreType: "Final",
+  },
+  {
+    title: "All score (100%)",
+    description: "คลิกเพื่ออัปโหลดทุกคะแนนคะเเนน",
+    color: " #C70039 ",
+    icon: <ProfileOutlined />,
+    scoreType: "allScore",
+  },
+];
+const AdminScoreReport = () => {
   const [student, setStudent] = useState([]);
+  const [courseData, setCoursesData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [transactionData, setTransactionData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [currentScoreType, setCurrentScoreType] = useState("");
 
-  const reportCards = [
-    {
-      title: "Quiz (20%)",
-      description: "คลิกเพื่ออัปโหลดคะเเนน Quiz",
-      color: "blue",
-      icon: <BookOutlined />,
-      scoreType: "Quiz",
-    },
-    {
-      title: "Homework (20%)",
-      description: "คลิกเพื่ออัปโหลดคะเเนน Homework",
-      color: "green",
-      icon: <FileTextOutlined />,
-      scoreType: "Homework",
-    },
-    {
-      title: "Midterm (30%)",
-      description: "คลิกเพื่ออัปโหลดคะเเนน Midterm",
-      color: "purple",
-      icon: <CalendarOutlined />,
-      scoreType: "Midterm",
-    },
-    {
-      title: "Final (30%)",
-      description: "คลิกเพื่ออัปโหลดคะเเนน Final",
-      color: "red",
-      icon: <FormOutlined />,
-      scoreType: "Final",
-    },
-    {
-      title: "All score (100%)",
-      description: "คลิกเพื่ออัปโหลดทุกคะแนนคะเเนน",
-      color: " #C70039 ",
-      icon: <ProfileOutlined />,
-      scoreType: "allScore",
-    },
-  ];
-
+  const { courseId } = useParams();
   const fetchStudent = async () => {
     try {
-      const studentScore = await ax.get("/scores?pagination[limit]=100");
-      const studentData = studentScore.data.data;
-      const filterStudents = studentData.filter(
-        (user) => user.sID === "240-123"
-      );
-      const userResponse = await ax.get("/users");
-      const userData = userResponse.data;
-      console.log(userData);
-      const userMap = userData.reduce((acc, user) => {
-        acc[user.UID] = {
-          firstname: user.firstname,
-          lastname: user.lastname,
-        };
-        return acc;
-      }, {});
-      setStudent(filterStudents);
+      const courseData = await ax.get(`/subjects/${courseId}?populate=*`);
+      const studentData = courseData.data.data.scores;
+      setCoursesData(courseData.data.data);
+      setStudent(studentData);
+
       setTransactionData(
-        filterStudents
+        studentData
           .map((row) => ({
             id: row.id,
             key: row.id,
             UID: row.UID,
-            firstname: userMap[row.UID]?.firstname || "Unknown",
-            lastname: userMap[row.UID]?.lastname || "Unknown",
             Quiz1: row.Quiz1,
             homeworkScore: row.homeworkScore,
             MidtermScore: row.MidtermScore,
@@ -110,9 +98,9 @@ const AdminDsaReport = () => {
   return (
     <div style={{ padding: "20px", minHeight: "100vh" }}>
       <div style={{ textAlign: "center", marginBottom: "20px" }}>
-        <Title level={2}>Data Structure & Algorithm Module</Title>
+        <Title level={2}>{courseData.title}</Title>
         <Title level={4} style={{ color: "#666" }}>
-          240-123
+          {courseData.IDsubject}
         </Title>
       </div>
       <Row
@@ -178,11 +166,12 @@ const AdminDsaReport = () => {
           </Col>
         ))}
       </Row>
+
       <div>
-        <ShowReport data={transactionData} />
+        <ShowReportT data={transactionData} />
       </div>
 
-      <DsaUploadModal
+      <WebdevUploadModal
         visible={modalVisible}
         onCancel={() => setModalVisible(false)}
         title={`${currentScoreType} Scores`}
@@ -193,4 +182,4 @@ const AdminDsaReport = () => {
   );
 };
 
-export default AdminDsaReport;
+export default AdminScoreReport;

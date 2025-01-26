@@ -34,6 +34,21 @@
     "IDsubject": {
       "type": "string",
       "unique": true
+    },
+    "code": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "section": {
+      "type": "string"
+    },
+    "credit": {
+      "type": "integer"
+    },
+    "key": {
+      "type": "string"
     }
   }
 }
