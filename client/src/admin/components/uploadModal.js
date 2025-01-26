@@ -15,9 +15,10 @@ const UploadModal = ({
   fetchStudentCallback,
 }) => {
   const { courseId } = useParams();
+
   const [excelFile, setExcelFile] = useState(null);
   const [loading, setLoading] = useState(false);
-  console.log("---------------------", courseId.data.data.code);
+
   const draggerProps = {
     name: "file",
     multiple: false,
@@ -63,7 +64,7 @@ const UploadModal = ({
       const workSheetName = workBook.SheetNames[0];
       const workSheet = workBook.Sheets[workSheetName];
       const data = XLSX.utils.sheet_to_json(workSheet);
-
+      console.log(data);
       console.log("Excel Data:", data);
 
       const updatePromises = data.map(async (studentData) => {

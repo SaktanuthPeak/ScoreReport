@@ -9,7 +9,8 @@ import {
   FormOutlined,
   ProfileOutlined,
 } from "@ant-design/icons";
-import WebdevUploadModal from "../components/uploadModal";
+import UploadModal from "../components/uploadModal";
+
 import ShowReportT from "../components/showReportT";
 
 const { Title } = Typography;
@@ -59,6 +60,7 @@ const AdminScoreReport = () => {
   const [currentScoreType, setCurrentScoreType] = useState("");
 
   const { courseId } = useParams();
+  console.log(courseId);
   const fetchStudent = async () => {
     try {
       const courseData = await ax.get(`/subjects/${courseId}?populate=*`);
@@ -171,7 +173,7 @@ const AdminScoreReport = () => {
         <ShowReportT data={transactionData} />
       </div>
 
-      <WebdevUploadModal
+      <UploadModal
         visible={modalVisible}
         onCancel={() => setModalVisible(false)}
         title={`${currentScoreType} Scores`}

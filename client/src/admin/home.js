@@ -4,30 +4,6 @@ import "./admin.css";
 import { Navigate, useNavigate } from "react-router-dom";
 import ax from "../conf/ax";
 
-// const courses = [
-//   {
-//     code: "240-123",
-//     title: "DATA STRU, ALGOR & PRO MODULE",
-//     section: "02",
-//     credit: 6,
-//     key: "data-structure-algo",
-//   },
-//   {
-//     code: "240-124",
-//     title: "WEB DESIGN & DEVELOPER MODULE",
-//     section: "02",
-//     credit: 9,
-//     key: "web-development",
-//   },
-//   {
-//     code: "890-104G1",
-//     title: "ENGLISH IN THE DIGITAL WORLD",
-//     section: "14",
-//     credit: 2,
-//     key: "english",
-//   },
-// ];
-
 const AdminHomePage = () => {
   const [name, setName] = useState(null);
   const [courses, setCourses] = useState([]);
