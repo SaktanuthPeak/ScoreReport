@@ -13,12 +13,11 @@ const UploadModal = ({
   title,
   scoreType,
   fetchStudentCallback,
+  student,
+  course,
 }) => {
-  const { courseId } = useParams();
-
   const [excelFile, setExcelFile] = useState(null);
   const [loading, setLoading] = useState(false);
-
   const draggerProps = {
     name: "file",
     multiple: false,
@@ -100,7 +99,7 @@ const UploadModal = ({
 
         try {
           const student = await ax.get(
-            `/scores?filters[UID]=${username}&filters[sID]=${courseId.data.data.code}`
+            `/scores?filters[UID]=${username}&filters[sID]=${course.code}`
           );
 
           console.log("Student API Response:", student.data.data);

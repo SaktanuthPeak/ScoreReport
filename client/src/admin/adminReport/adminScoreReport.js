@@ -65,6 +65,7 @@ const AdminScoreReport = () => {
     try {
       const courseData = await ax.get(`/subjects/${courseId}?populate=*`);
       const studentData = courseData.data.data.scores;
+      console.log("+++++++", courseData.data.data);
       setCoursesData(courseData.data.data);
       setStudent(studentData);
 
@@ -102,7 +103,7 @@ const AdminScoreReport = () => {
       <div style={{ textAlign: "center", marginBottom: "20px" }}>
         <Title level={2}>{courseData.title}</Title>
         <Title level={4} style={{ color: "#666" }}>
-          {courseData.IDsubject}
+          {courseData.Code}
         </Title>
       </div>
       <Row
@@ -174,6 +175,8 @@ const AdminScoreReport = () => {
       </div>
 
       <UploadModal
+        student={student}
+        course={courseData}
         visible={modalVisible}
         onCancel={() => setModalVisible(false)}
         title={`${currentScoreType} Scores`}
