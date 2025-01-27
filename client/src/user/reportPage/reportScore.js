@@ -28,30 +28,23 @@ const getGrade = (totalScore) => {
 const ReportScore = () => {
   const { courseId } = useParams();
   const [allScores, setAllScores] = useState([]);
+  const [userInfo, setUserInfo] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
   useEffect(() => {
     const fetchScoresAndUser = async () => {
       try {
-        const courseData = await ax.get(`/subjects/${courseId}`);
         const userResult = await ax.get("/users/me");
         const userData = userResult.data;
-
-        const scoresResult = await ax.get(
-          "/scores?populate=*&pagination[limit]=100"
+        setUserInfo(userData);
+        const courseData = await ax.get(
+          `/subjects?populate[scores][filters][UID][$eq]=${userData.UID}&filters[documentId][$eq]=${courseId}`
         );
-        const scoresData = scoresResult.data.data;
-
-        const filteredScores = scoresData.filter(
-          (score) =>
-            score.users_permissions_user?.UID === userData.UID &&
-            score.subject?.sID === courseData.data.data.sID
-        );
+        const data = courseData.data.data[0].scores;
 
         setCurrentUser(userData);
-        setAllScores(filteredScores);
+        setAllScores(data);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching scores or user data:", error);
@@ -167,7 +160,7 @@ const ReportScore = () => {
                     <MailOutlined style={{ marginRight: 8 }} />
                     Email:
                   </Text>
-                  <Text>{score.users_permissions_user.email}</Text>
+                  <Text>{userInfo.email}</Text>
                 </Col>
                 <Col span={12}>
                   <Text strong>
