@@ -13,7 +13,6 @@ const AdminHomePage = () => {
         const subject = await ax.get("/subjects?populate=*");
         const subjectData = subject.data.data;
         setCourses(subjectData);
-        console.log(subject.data.data);
       } catch (error) {
         console.log("this is error", error);
       }

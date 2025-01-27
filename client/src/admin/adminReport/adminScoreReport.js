@@ -60,12 +60,10 @@ const AdminScoreReport = () => {
   const [currentScoreType, setCurrentScoreType] = useState("");
 
   const { courseId } = useParams();
-  console.log(courseId);
   const fetchStudent = async () => {
     try {
       const courseData = await ax.get(`/subjects/${courseId}?populate=*`);
       const studentData = courseData.data.data.scores;
-      console.log("+++++++", courseData.data.data);
       setCoursesData(courseData.data.data);
       setStudent(studentData);
 

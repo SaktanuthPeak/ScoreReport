@@ -63,12 +63,8 @@ const UploadModal = ({
       const workSheetName = workBook.SheetNames[0];
       const workSheet = workBook.Sheets[workSheetName];
       const data = XLSX.utils.sheet_to_json(workSheet);
-      console.log(data);
-      console.log("Excel Data:", data);
 
       const updatePromises = data.map(async (studentData) => {
-        console.log("Processing Student:", studentData);
-
         const payload = {};
         if (scoreType === "allScore") {
           payload.Quiz1 = studentData.Quiz1;
@@ -95,14 +91,10 @@ const UploadModal = ({
         const username =
           studentData.username || studentData.UID || studentData.id;
 
-        console.log("Searching for username:", username);
-
         try {
           const student = await ax.get(
             `/scores?filters[UID]=${username}&filters[sID]=${course.code}`
           );
-
-          console.log("Student API Response:", student.data.data);
 
           if (student.data.data.length > 0) {
             const studentRecord = student.data.data[0];
