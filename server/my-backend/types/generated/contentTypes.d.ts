@@ -395,7 +395,7 @@ export interface ApiScoreScore extends Struct.CollectionTypeSchema {
     homeworkScore: Schema.Attribute.Float &
       Schema.Attribute.SetMinMax<
         {
-          max: 40;
+          max: 20;
           min: 0;
         },
         number
@@ -403,12 +403,18 @@ export interface ApiScoreScore extends Struct.CollectionTypeSchema {
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::score.score'> &
       Schema.Attribute.Private;
-    MidtermScore: Schema.Attribute.Float;
+    MidtermScore: Schema.Attribute.Float &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 30;
+        },
+        number
+      >;
     publishedAt: Schema.Attribute.DateTime;
     Quiz1: Schema.Attribute.Float &
       Schema.Attribute.SetMinMax<
         {
-          max: 10;
+          max: 20;
           min: 0;
         },
         number

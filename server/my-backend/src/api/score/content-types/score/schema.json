@@ -15,10 +15,11 @@
     "Quiz1": {
       "type": "float",
       "min": 0,
-      "max": 10
+      "max": 20
     },
     "MidtermScore": {
-      "type": "float"
+      "type": "float",
+      "max": 30
     },
     "FinalScore": {
       "type": "float",
@@ -28,7 +29,7 @@
     "homeworkScore": {
       "type": "float",
       "min": 0,
-      "max": 40
+      "max": 20
     },
     "users_permissions_user": {
       "type": "relation",
