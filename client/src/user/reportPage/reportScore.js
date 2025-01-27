@@ -28,7 +28,7 @@ const getGrade = (totalScore) => {
 const ReportScore = () => {
   const { courseId } = useParams();
   const [allScores, setAllScores] = useState([]);
-  const [userInfo, setUserInfo] = useState(null);
+  const [currentCourse, setCurrentCourse] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -37,14 +37,16 @@ const ReportScore = () => {
       try {
         const userResult = await ax.get("/users/me");
         const userData = userResult.data;
-        setUserInfo(userData);
         const courseData = await ax.get(
           `/subjects?populate[scores][filters][UID][$eq]=${userData.UID}&filters[documentId][$eq]=${courseId}`
         );
-        const data = courseData.data.data[0].scores;
+        const data = courseData.data.data[0];
+        const scoreData = data.scores;
+        console.log(data.title);
 
+        setCurrentCourse(data);
         setCurrentUser(userData);
-        setAllScores(data);
+        setAllScores(scoreData);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching scores or user data:", error);
@@ -113,7 +115,7 @@ const ReportScore = () => {
       }}
     >
       <Title level={2} style={{ textAlign: "center", marginBottom: "24px" }}>
-        Data Structure Report
+        {currentCourse.title} REPORT
       </Title>
 
       {allScores.length > 0 ? (
@@ -160,7 +162,7 @@ const ReportScore = () => {
                     <MailOutlined style={{ marginRight: 8 }} />
                     Email:
                   </Text>
-                  <Text>{userInfo.email}</Text>
+                  <Text>{currentUser.email}</Text>
                 </Col>
                 <Col span={12}>
                   <Text strong>
