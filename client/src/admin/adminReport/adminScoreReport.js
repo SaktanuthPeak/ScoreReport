@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Card, Row, Col, Typography, Button, message } from "antd";
+import { Card, Row, Col, Typography, Button, message, Space, Layout, theme } from "antd";
 import ax from "../../conf/ax";
 import { useParams } from "react-router-dom";
 import {
@@ -101,7 +101,6 @@ const AdminScoreReport = () => {
   };
 
   const handleSearchBarChange = (selectedOptions) => {
-    // Extract usernames from the selected options
     const usernames = selectedOptions.map((option) => option.value);
     setSelectedUsers(usernames);
     console.log("Selected usernames updated:", usernames);
@@ -143,7 +142,7 @@ const AdminScoreReport = () => {
   useEffect(() => {
     fetchStudentData();
   }, []);
-
+  const { token } = theme.useToken();
   return (
     <div style={{ padding: "20px", minHeight: "100vh" }}>
       <div style={{ textAlign: "center", marginBottom: "20px" }}>
@@ -187,19 +186,24 @@ const AdminScoreReport = () => {
         ))}
       </Row>
 
-      <div style={{ marginBottom: "20px" }}>
-        <SearchBar onChange={handleSearchBarChange} courseId={courseId} />
-      </div>
 
-      <div style={{ textAlign: "center", marginBottom: "20px" }}>
-        <Button
-          type="primary"
-          onClick={fetchSelectedUsersData}
-          loading={loading}
-        >
-          Submit Selected Users
-        </Button>
-      </div>
+      <Space direction="vertical" size="middle" style={{ width: '100%' }}>
+        <Row justify="space-between" align="middle">
+          <Col>
+          </Col>
+        </Row>
+        <SearchBar onChange={handleSearchBarChange} courseId={courseId} />
+        <Row justify="end">
+          <Button
+            type="primary"
+            onClick={fetchSelectedUsersData}
+            loading={loading}
+          >
+            Submit Selected Users
+          </Button>
+        </Row>
+      </Space>
+
 
       <div style={{ marginTop: "20px" }}>
         <ShowReportT data={transactionData} loading={loading} />
