@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Card, Row, Col, Typography } from "antd";
+import { Card, Row, Col, Typography, Button, message } from "antd";
 import ax from "../../conf/ax";
 import { useParams } from "react-router-dom";
 import {
@@ -10,79 +10,87 @@ import {
   ProfileOutlined,
 } from "@ant-design/icons";
 import UploadModal from "../components/uploadModal";
-
+import SearchBar from "../components/searchBar";
 import ShowReportT from "../components/showReportT";
 
 const { Title } = Typography;
+
 const reportCards = [
   {
     title: "Quiz (20%)",
-    description: "คลิกเพื่ออัปโหลดคะเเนน Quiz",
+    description: "Click to upload Quiz scores",
     color: "blue",
     icon: <BookOutlined />,
     scoreType: "Quiz",
   },
   {
     title: "Homework (20%)",
-    description: "คลิกเพื่ออัปโหลดคะเเนน Homework",
+    description: "Click to upload Homework scores",
     color: "green",
     icon: <FileTextOutlined />,
     scoreType: "Homework",
   },
   {
     title: "Midterm (30%)",
-    description: "คลิกเพื่ออัปโหลดคะเเนน Midterm",
+    description: "Click to upload Midterm scores",
     color: "purple",
     icon: <CalendarOutlined />,
     scoreType: "Midterm",
   },
   {
     title: "Final (30%)",
-    description: "คลิกเพื่ออัปโหลดคะเเนน Final",
+    description: "Click to upload Final scores",
     color: "red",
     icon: <FormOutlined />,
     scoreType: "Final",
   },
   {
-    title: "All score (100%)",
-    description: "คลิกเพื่ออัปโหลดทุกคะแนนคะเเนน",
-    color: " #C70039 ",
+    title: "All Scores (100%)",
+    description: "Click to upload all scores",
+    color: "#C70039",
     icon: <ProfileOutlined />,
     scoreType: "allScore",
   },
 ];
+
 const AdminScoreReport = () => {
-  const [student, setStudent] = useState([]);
-  const [courseData, setCoursesData] = useState([]);
+  const [students, setStudents] = useState([]);
+  const [courseData, setCourseData] = useState({});
   const [loading, setLoading] = useState(true);
   const [transactionData, setTransactionData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [currentScoreType, setCurrentScoreType] = useState("");
-
+  const [selectedUsers, setSelectedUsers] = useState([]); // Track selected usernames
+  const [userData, setUserData] = useState([]);
   const { courseId } = useParams();
-  const fetchStudent = async () => {
+
+  const fetchStudentData = async () => {
     try {
-      const courseData = await ax.get(`/subjects/${courseId}?populate=*`);
-      const studentData = courseData.data.data.scores;
-      setCoursesData(courseData.data.data);
-      setStudent(studentData);
+      const courseResponse = await ax.get(`/subjects/${courseId}?populate=*`);
+      const course = courseResponse.data.data;
+      console.log("Course data:", course);
+      setCourseData(course);
+
+      const students = course.scores;
+      setStudents(students);
 
       setTransactionData(
-        studentData
-          .map((row) => ({
-            id: row.id,
-            key: row.id,
-            UID: row.UID,
-            Quiz1: row.Quiz1,
-            homeworkScore: row.homeworkScore,
-            MidtermScore: row.MidtermScore,
-            FinalScore: row.FinalScore,
+        students
+          .map((student) => ({
+            id: student.id,
+            key: student.id,
+            UID: student.UID,
+            Quiz1: student.Quiz1,
+            homeworkScore: student.homeworkScore,
+            MidtermScore: student.MidtermScore,
+            FinalScore: student.FinalScore,
           }))
           .sort((a, b) => a.UID.localeCompare(b.UID))
       );
+
       setLoading(false);
     } catch (error) {
-      console.error("Error fetching scores or user data:", error);
+      console.error("Error fetching student data:", error);
       setLoading(false);
     }
   };
@@ -92,26 +100,60 @@ const AdminScoreReport = () => {
     setModalVisible(true);
   };
 
+  const handleSearchBarChange = (selectedOptions) => {
+    // Extract usernames from the selected options
+    const usernames = selectedOptions.map((option) => option.value);
+    setSelectedUsers(usernames);
+    console.log("Selected usernames updated:", usernames);
+  };
+
+  const fetchSelectedUsersData = async () => {
+    if (selectedUsers.length === 0) {
+      message.warning("No users selected.");
+      return;
+    }
+
+    console.log("Submitting selected usernames:", selectedUsers);
+
+    try {
+      setLoading(true);
+      setTransactionData(
+        students
+          .map((student) => ({
+            id: student.id,
+            key: student.id,
+            UID: student.UID,
+            Quiz1: student.Quiz1,
+            homeworkScore: student.homeworkScore,
+            MidtermScore: student.MidtermScore,
+            FinalScore: student.FinalScore,
+          }))
+          .filter((student) => selectedUsers.includes(student.UID))
+          .sort((a, b) => a.UID.localeCompare(b.UID))
+      );
+      message.success("User data fetched successfully!");
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+      message.error("Failed to fetch user data.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    fetchStudent();
+    fetchStudentData();
   }, []);
 
   return (
     <div style={{ padding: "20px", minHeight: "100vh" }}>
       <div style={{ textAlign: "center", marginBottom: "20px" }}>
-        <Title level={2}>{courseData.title}</Title>
+        <Title level={2}>{courseData.title || "Loading..."}</Title>
         <Title level={4} style={{ color: "#666" }}>
-          {courseData.Code}
+          {courseData.Code || ""}
         </Title>
       </div>
-      <Row
-        gutter={[16, 16]}
-        style={{
-          paddingBottom: "1rem",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
+
+      <Row gutter={[16, 16]} justify="center">
         {reportCards.map((card) => (
           <Col key={card.title}>
             <Card
@@ -121,7 +163,6 @@ const AdminScoreReport = () => {
                 borderRadius: "12px",
                 boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
                 transition: "transform 0.3s",
-                textAlign: "center",
               }}
               bodyStyle={{
                 display: "flex",
@@ -133,53 +174,45 @@ const AdminScoreReport = () => {
               <div
                 style={{
                   color: card.color,
-                  borderRadius: "50%",
-                  width: "13.2rem",
-                  height: "5rem",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  marginBottom: "0.5rem",
                   fontSize: "3rem",
+                  marginBottom: "1rem",
                 }}
               >
                 {card.icon}
               </div>
-              <h3
-                style={{
-                  color: card.color,
-                  marginBottom: "10px",
-                  fontSize: "18px",
-                  fontWeight: "bold",
-                }}
-              >
-                {card.title}
-              </h3>
-              <p
-                style={{
-                  color: "#666",
-                  textAlign: "center",
-                }}
-              >
-                {card.description}
-              </p>
+              <h3 style={{ color: card.color }}>{card.title}</h3>
+              <p>{card.description}</p>
             </Card>
           </Col>
         ))}
       </Row>
 
-      <div>
-        <ShowReportT data={transactionData} />
+      <div style={{ marginBottom: "20px" }}>
+        <SearchBar onChange={handleSearchBarChange} courseId={courseId} />
+      </div>
+
+      <div style={{ textAlign: "center", marginBottom: "20px" }}>
+        <Button
+          type="primary"
+          onClick={fetchSelectedUsersData}
+          loading={loading}
+        >
+          Submit Selected Users
+        </Button>
+      </div>
+
+      <div style={{ marginTop: "20px" }}>
+        <ShowReportT data={transactionData} loading={loading} />
       </div>
 
       <UploadModal
-        student={student}
+        student={students}
         course={courseData}
         visible={modalVisible}
         onCancel={() => setModalVisible(false)}
         title={`${currentScoreType} Scores`}
         scoreType={currentScoreType}
-        fetchStudentCallback={fetchStudent}
+        fetchStudentCallback={fetchStudentData}
       />
     </div>
   );
