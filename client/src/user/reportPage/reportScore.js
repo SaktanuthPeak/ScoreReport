@@ -46,8 +46,8 @@ const ReportScore = () => {
 
         const filteredScores = scoresData.filter(
           (score) =>
-            score.users_permissions_user?.username === userData.username &&
-            score.subject?.NameOfsubJect === courseData.data.data.NameOfsubJect
+            score.users_permissions_user?.UID === userData.UID &&
+            score.subject?.sID === courseData.data.data.sID
         );
 
         setCurrentUser(userData);

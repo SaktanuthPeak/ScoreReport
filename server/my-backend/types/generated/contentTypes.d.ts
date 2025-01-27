@@ -378,7 +378,7 @@ export interface ApiScoreScore extends Struct.CollectionTypeSchema {
     singularName: 'score';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     createdAt: Schema.Attribute.DateTime;
@@ -435,7 +435,7 @@ export interface ApiSubjectSubject extends Struct.CollectionTypeSchema {
     singularName: 'subject';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     code: Schema.Attribute.String;

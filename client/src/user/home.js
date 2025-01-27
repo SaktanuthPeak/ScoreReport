@@ -15,8 +15,13 @@ const Homepage = () => {
       try {
         const result = await ax.get("users/me?populate=*");
         const courses = result.data.subjects;
+        console.log(courses)
         const Firstname = result.data.firstname;
         const Lastname = result.data.lastname;
+        // const uniqueCourses = courses.filter(
+        //   (course, index, self) =>
+        //     index === self.findIndex((c) => c.documentId === course.documentId)
+        // );
         setCourseData(courses);
         setFirstName(Firstname);
         setLastName(Lastname);
