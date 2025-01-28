@@ -214,7 +214,7 @@ const AdminScoreReport = () => {
         course={courseData}
         visible={modalVisible}
         onCancel={() => setModalVisible(false)}
-        title={`${currentScoreType} Scores`}
+        title={`${currentScoreType}Scores`}
         scoreType={currentScoreType}
         fetchStudentCallback={fetchStudentData}
       />
