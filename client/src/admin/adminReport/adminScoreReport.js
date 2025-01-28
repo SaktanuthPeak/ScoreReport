@@ -1,5 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Card, Row, Col, Typography, Button, message, Space, Layout, theme } from "antd";
+import {
+  Card,
+  Row,
+  Col,
+  Typography,
+  Button,
+  message,
+  Space,
+  Layout,
+  theme,
+} from "antd";
 import ax from "../../conf/ax";
 import { useParams } from "react-router-dom";
 import {
@@ -152,7 +162,7 @@ const AdminScoreReport = () => {
         </Title>
       </div>
 
-      <Row gutter={[16, 16]} justify="center">
+      <Row gutter={[16, 16]} justify="center" style={{ paddingBottom: "1em" }}>
         {reportCards.map((card) => (
           <Col key={card.title}>
             <Card
@@ -168,6 +178,7 @@ const AdminScoreReport = () => {
                 flexDirection: "column",
                 alignItems: "center",
                 padding: "20px",
+                width: "18em",
               }}
             >
               <div
@@ -185,25 +196,17 @@ const AdminScoreReport = () => {
           </Col>
         ))}
       </Row>
-
-
-      <Space direction="vertical" size="middle" style={{ width: '100%' }}>
-        <Row justify="space-between" align="middle">
-          <Col>
-          </Col>
-        </Row>
+      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
         <SearchBar onChange={handleSearchBarChange} courseId={courseId} />
-        <Row justify="end">
-          <Button
-            type="primary"
-            onClick={fetchSelectedUsersData}
-            loading={loading}
-          >
-            Submit Selected Users
-          </Button>
-        </Row>
-      </Space>
 
+        <Button
+          type="primary"
+          onClick={fetchSelectedUsersData}
+          loading={loading}
+        >
+          Submit Selected Users
+        </Button>
+      </div>
 
       <div style={{ marginTop: "20px" }}>
         <ShowReportT data={transactionData} loading={loading} />
