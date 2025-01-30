@@ -19,6 +19,8 @@ import AdminHomePage from "./admin/home";
 import AdminProfile from "./admin/profilePage";
 import AdminScoreReport from "./admin/adminReport/adminScoreReport";
 import ReportScore from "./user/reportPage/reportScore";
+import Dashboard from "./admin/dashboard";
+import AdminDashBoard from "./admin/adminReport/adminDashboard";
 
 const { Sider, Content } = Layout;
 
