@@ -19,6 +19,7 @@ import AdminHomePage from "./admin/home";
 import AdminProfile from "./admin/profilePage";
 import AdminScoreReport from "./admin/adminReport/adminScoreReport";
 import ReportScore from "./user/reportPage/reportScore";
+
 const { Sider, Content } = Layout;
 
 axios.defaults.baseURL =
@@ -29,6 +30,7 @@ const App = () => {
   const [userRole, setUserRole] = useState(null);
   const [nav, setNav] = useState(null);
   const [home, setHome] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (state.isLoggedIn) {
@@ -41,18 +43,27 @@ const App = () => {
           if (role === "student") {
             setNav(<StudentNavbar />);
             setHome("/student-home");
-          } else {
+          } else if (role === "admin") {
             setNav(<AdminNavbar />);
             setHome("/admin-home");
+          } else {
+            setUserRole(null);
           }
         } catch (error) {
           console.error("Error fetching role:", error);
+          setUserRole(null);
+        } finally {
+          setLoading(false);
         }
       };
 
       fetchRole();
+    } else {
+      setLoading(false);
     }
   }, [state.isLoggedIn]);
+
+  if (loading) return <div>Loading...</div>;
 
   return (
     <Router>
@@ -78,49 +89,86 @@ const App = () => {
                   state.isLoggedIn ? <Navigate to={home} /> : <LoginScreen />
                 }
               />
+              {/* Student page */}
               <Route
                 path="/student-home"
                 element={
-                  state.isLoggedIn ? <StudentHome /> : <Navigate to="/login" />
+                  state.isLoggedIn && userRole === "student" ? (
+                    <StudentHome />
+                  ) : (
+                    <Navigate to={home || "/login"} />
+                  )
                 }
               />
               <Route
                 path="/student-home/:courseId"
                 element={
-                  state.isLoggedIn ? <ReportScore /> : <Navigate to="/login" />
+                  state.isLoggedIn && userRole === "student" ? (
+                    <ReportScore />
+                  ) : (
+                    <Navigate to={home || "/login"} />
+                  )
                 }
               />
               <Route
                 path="/student-home/profile"
                 element={
-                  state.isLoggedIn ? <Profile /> : <Navigate to="/login" />
+                  state.isLoggedIn && userRole === "student" ? (
+                    <Profile />
+                  ) : (
+                    <Navigate to={home || "/login"} />
+                  )
                 }
               />
-              {/* admin page */}
+              {/* Admin page */}
               <Route
                 path="/admin-home"
                 element={
-                  state.isLoggedIn ? (
+                  state.isLoggedIn && userRole === "admin" ? (
                     <AdminHomePage />
                   ) : (
-                    <Navigate to="/login" />
+                    <Navigate to={home || "/login"} />
                   )
                 }
               />
               <Route
                 path="/admin-home/:courseId"
                 element={
-                  state.isLoggedIn ? (
+                  state.isLoggedIn && userRole === "admin" ? (
                     <AdminScoreReport />
                   ) : (
-                    <Navigate to="/login" />
+                    <Navigate to={home || "/login"} />
                   )
                 }
               />
               <Route
                 path="/admin-home/profile"
                 element={
-                  state.isLoggedIn ? <AdminProfile /> : <Navigate to="/login" />
+                  state.isLoggedIn && userRole === "admin" ? (
+                    <AdminProfile />
+                  ) : (
+                    <Navigate to={home || "/login"} />
+                  )
+                }
+              />
+              <Route
+                path="/admin-dashboard"
+                element={
+                  state.isLoggedIn && userRole === "admin" ? (
+                    <Dashboard />
+                  ) : (
+                    <Navigate to={home || "/login"} />
+                  )
+                }
+              />
+              <Route
+                path="/admin-dashboard/:courseId"
+                element={
+                  state.isLoggedIn && userRole === "admin" ? (
+                    <AdminDashBoard />
+                  ) : (
+                    <Navigate to={home || "/login"} />
+                  )
                 }
               />
             </Routes>

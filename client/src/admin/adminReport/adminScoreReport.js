@@ -18,10 +18,12 @@ import {
   CalendarOutlined,
   FormOutlined,
   ProfileOutlined,
+  HomeFilled
 } from "@ant-design/icons";
 import UploadModal from "../components/uploadModal";
 import SearchBar from "../components/searchBar";
 import ShowReportT from "../components/showReportT";
+import { useNavigate } from "react-router-dom";
 
 const { Title } = Typography;
 
@@ -70,9 +72,10 @@ const AdminScoreReport = () => {
   const [transactionData, setTransactionData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [currentScoreType, setCurrentScoreType] = useState("");
-  const [selectedUsers, setSelectedUsers] = useState([]); // Track selected usernames
+  const [selectedUsers, setSelectedUsers] = useState([]);
   const [userData, setUserData] = useState([]);
   const { courseId } = useParams();
+  const navigate = useNavigate();
 
   const fetchStudentData = async () => {
     try {
@@ -155,6 +158,14 @@ const AdminScoreReport = () => {
   const { token } = theme.useToken();
   return (
     <div style={{ padding: "20px", minHeight: "100vh" }}>
+      <Button
+        icon={<HomeFilled />}
+        onClick={() => navigate("/admin-home")}
+
+      >
+        Back to home
+
+      </Button>
       <div style={{ textAlign: "center", marginBottom: "20px" }}>
         <Title level={2}>{courseData.title || "Loading..."}</Title>
         <Title level={4} style={{ color: "#666" }}>

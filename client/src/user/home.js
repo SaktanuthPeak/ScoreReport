@@ -1,43 +1,98 @@
 import React, { useEffect, useState } from "react";
-import { Card, Row, Col, Tag } from "antd";
-import "./user.css";
-import { useNavigate } from "react-router-dom";
+import { Card, Row, Col, Tag, Button } from "antd";
+import { Navigate, useNavigate } from "react-router-dom";
+import { SearchOutlined } from '@ant-design/icons';
 import ax from "../conf/ax";
+import SubjectSearchBar from "./components/subjectSearchBar";
 
-const Homepage = () => {
-  const navigate = useNavigate();
+const StudentHome = () => {
   const [firstname, setFirstName] = useState(null);
   const [lastname, setLastName] = useState(null);
-  const [courseData, setCourseData] = useState([]);
+  const [uid, setUid] = useState(null);
+  const [courses, setCourses] = useState([]);
+  const [filteredCourses, setFilteredCourses] = useState([]);
+  const [selectedSubject, setSelectedSubject] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const subject = await ax.get("/subjects?populate=*");
+        const titles = subject.data.data.map(item => item.title);
+        console.log('subject list =>>>>>', titles)
+        const subjectData = subject.data.data;
+        setCourses(subjectData);
+        setFilteredCourses(subjectData);
+      } catch (error) {
+        console.log("this is error", error);
+      }
+    };
+    fetchCourses();
+  }, []);
 
   useEffect(() => {
     const fetchName = async () => {
-      try {
-        const result = await ax.get("users/me?populate=*");
-        const courses = result.data.subjects;
-        const Firstname = result.data.firstname;
-        const Lastname = result.data.lastname;
-        // const uniqueCourses = courses.filter(
-        //   (course, index, self) =>
-        //     index === self.findIndex((c) => c.documentId === course.documentId)
-        // );
-        setCourseData(courses);
-        setFirstName(Firstname);
-        setLastName(Lastname);
-      } catch (error) {
-        console.error("Failed to fetch user name", error);
-      }
+      const result = await ax.get("users/me");
+      const firstName = result.data.firstname;
+      const lastName = result.data.lastname;
+      const studentId = result.data.UID
+      setFirstName(firstName);
+      setLastName(lastName);
+      setUid(studentId);
     };
     fetchName();
   }, []);
 
+  const navigate = useNavigate();
+
+  const handleSubjectChange = (selectedOptions) => {
+    setSelectedSubject(selectedOptions);
+  };
+
+  const handleFilter = () => {
+    setLoading(true);
+
+    if (selectedSubject.length === 0) {
+      setFilteredCourses(courses);
+    } else {
+      const selectedTitles = selectedSubject.map(option => option.value);
+      const filtered = courses.filter(course =>
+        selectedTitles.includes(course.title)
+      );
+      setFilteredCourses(filtered);
+    }
+
+    setLoading(false);
+  };
+
   return (
     <div style={{ padding: "30px" }}>
-      <h1>
-        สวัสดีคุณ{firstname} {lastname}
-      </h1>
+      <div style={{ marginBottom: "32px" }}>
+        <h1 style={{ marginBottom: "24px" }}>สวัสดีคุณ{firstname} {lastname}</h1>
+        <h2 style={{ marginBottom: "24px" }}>รหัสนักศึกษา : {uid} </h2>
+
+        <div style={{
+          maxWidth: "800px",
+          display: "flex",
+          alignItems: "center",
+          gap: "16px",
+        }}>
+          <div style={{ flex: 1 }}>
+            <SubjectSearchBar onChange={handleSubjectChange} />
+          </div>
+          <Button
+            icon={<SearchOutlined />}
+            type="primary"
+            onClick={handleFilter}
+            loading={loading}
+          >
+            Search Subject
+          </Button>
+        </div>
+      </div>
+
       <Row gutter={[16, 16]} style={{ display: "flex", flexWrap: "wrap" }}>
-        {courseData.map((course, index) => (
+        {filteredCourses.map((course, index) => (
           <Col
             xs={24}
             sm={24}
@@ -53,7 +108,6 @@ const Homepage = () => {
             <Card
               className="custom-card"
               style={{
-                backgroundColor: "#eaf8f8",
                 borderRadius: "10px",
                 boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                 cursor: "pointer",
@@ -78,4 +132,4 @@ const Homepage = () => {
   );
 };
 
-export default Homepage;
+export default StudentHome;

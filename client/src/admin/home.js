@@ -1,18 +1,27 @@
 import React, { useEffect, useState } from "react";
-import { Card, Row, Col, Tag } from "antd";
+import { Card, Row, Col, Tag, Button } from "antd";
 import "./admin.css";
 import { Navigate, useNavigate } from "react-router-dom";
+import { SearchOutlined } from '@ant-design/icons';
 import ax from "../conf/ax";
+import SubjectSearchBar from "./components/subjectSearchBar";
 
 const AdminHomePage = () => {
   const [name, setName] = useState(null);
   const [courses, setCourses] = useState([]);
+  const [filteredCourses, setFilteredCourses] = useState([]);
+  const [selectedSubject, setSelectedSubject] = useState([]);
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     const fetchCourses = async () => {
       try {
         const subject = await ax.get("/subjects?populate=*");
+        const titles = subject.data.data.map(item => item.title);
+        console.log('subject list =>>>>>', titles)
         const subjectData = subject.data.data;
         setCourses(subjectData);
+        setFilteredCourses(subjectData);
       } catch (error) {
         console.log("this is error", error);
       }
@@ -28,16 +37,56 @@ const AdminHomePage = () => {
     };
     fetchName();
   }, []);
+
   const navigate = useNavigate();
-  const handleCardClick = (coursekey) => {
-    navigate(`/admin-home/${coursekey}`);
+
+  const handleSubjectChange = (selectedOptions) => {
+    setSelectedSubject(selectedOptions);
+  };
+
+  const handleFilter = () => {
+    setLoading(true);
+
+    if (selectedSubject.length === 0) {
+      setFilteredCourses(courses);
+    } else {
+      const selectedTitles = selectedSubject.map(option => option.value);
+      const filtered = courses.filter(course =>
+        selectedTitles.includes(course.title)
+      );
+      setFilteredCourses(filtered);
+    }
+
+    setLoading(false);
   };
 
   return (
     <div style={{ padding: "30px" }}>
-      <h1>Hello {name}</h1>
+      <div style={{ marginBottom: "32px" }}>
+        <h1 style={{ marginBottom: "24px" }}>Hello {name}</h1>
+
+        <div style={{
+          maxWidth: "800px",
+          display: "flex",
+          alignItems: "center",
+          gap: "15px",
+        }}>
+          <div style={{ flex: 1 }}>
+            <SubjectSearchBar onChange={handleSubjectChange} />
+          </div>
+          <Button
+            icon={<SearchOutlined />}
+            type="primary"
+            onClick={handleFilter}
+            loading={loading}
+          >
+            Search Subject
+          </Button>
+        </div>
+      </div>
+
       <Row gutter={[16, 16]} style={{ display: "flex", flexWrap: "wrap" }}>
-        {courses.map((course, index) => (
+        {filteredCourses.map((course, index) => (
           <Col
             xs={24}
             sm={24}

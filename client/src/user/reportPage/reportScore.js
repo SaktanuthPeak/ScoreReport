@@ -21,8 +21,9 @@ const getGrade = (totalScore) => {
   if (totalScore >= 70) return "B";
   if (totalScore >= 65) return "C+";
   if (totalScore >= 60) return "C";
-  if (totalScore >= 50) return "D";
-  return "E";
+  if (totalScore >= 55) return "D";
+  if (totalScore >= 50) return "D+"
+  else return "E";
 };
 
 const ReportScore = () => {
