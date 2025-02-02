@@ -18,13 +18,13 @@ import {
   CalendarOutlined,
   FormOutlined,
   ProfileOutlined,
-  HomeFilled
+  HomeFilled,
 } from "@ant-design/icons";
 import UploadModal from "../components/uploadModal";
 import SearchBar from "../components/searchBar";
 import ShowReportT from "../components/showReportT";
 import { useNavigate } from "react-router-dom";
-
+import EditOnRowItem from "../components/editOnRowItem";
 const { Title } = Typography;
 
 const reportCards = [
@@ -74,6 +74,9 @@ const AdminScoreReport = () => {
   const [currentScoreType, setCurrentScoreType] = useState("");
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [userData, setUserData] = useState([]);
+  const [editData, setEditData] = useState([]);
+  const [openEditForm, setOpenEditForm] = useState(false);
+  const { token } = theme.useToken();
   const { courseId } = useParams();
   const navigate = useNavigate();
 
@@ -90,6 +93,7 @@ const AdminScoreReport = () => {
       setTransactionData(
         students
           .map((student) => ({
+            documentId: student.documentId,
             id: student.id,
             key: student.id,
             UID: student.UID,
@@ -132,6 +136,7 @@ const AdminScoreReport = () => {
       setTransactionData(
         students
           .map((student) => ({
+            documentId: student.documentId,
             id: student.id,
             key: student.id,
             UID: student.UID,
@@ -155,16 +160,53 @@ const AdminScoreReport = () => {
   useEffect(() => {
     fetchStudentData();
   }, []);
-  const { token } = theme.useToken();
+
+  const openForm = (record) => {
+    setEditData(record);
+    setOpenEditForm(true);
+  };
+
+  const closeForm = () => {
+    setOpenEditForm(false);
+  };
+
+  const handleEditItem = async (item) => {
+    try {
+      setLoading(true);
+      const payload = {};
+      payload.Quiz1 = item.Quiz1;
+      payload.homeworkScore = item.homeworkScore;
+      payload.MidtermScore = item.MidtermScore;
+      payload.FinalScore = item.FinalScore;
+      console.log("++++++++++++++++++++", payload);
+      const response = await ax.put(`/scores/${item.documentId}`, {
+        data: payload,
+      });
+      fetchStudentData();
+      const { id, attributes } = response.data.data;
+      setTransactionData([
+        ...transactionData,
+        { id: id, key: id, ...attributes },
+      ]);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleNoteChanged = (id, note) => {
+    setTransactionData(
+      transactionData.map((transaction) => {
+        transaction.note = transaction.id === id ? note : transaction.note;
+        return transaction;
+      })
+    );
+  };
   return (
     <div style={{ padding: "20px", minHeight: "100vh" }}>
-      <Button
-        icon={<HomeFilled />}
-        onClick={() => navigate("/admin-home")}
-
-      >
+      <Button icon={<HomeFilled />} onClick={() => navigate("/admin-home")}>
         Back to home
-
       </Button>
       <div style={{ textAlign: "center", marginBottom: "20px" }}>
         <Title level={2}>{courseData.title || "Loading..."}</Title>
@@ -220,7 +262,19 @@ const AdminScoreReport = () => {
       </div>
 
       <div style={{ marginTop: "20px" }}>
-        <ShowReportT data={transactionData} loading={loading} />
+        <ShowReportT
+          data={transactionData}
+          loading={loading}
+          onNoteChanged={handleNoteChanged}
+          onRowEdit={openForm}
+        />
+        {openEditForm && (
+          <EditOnRowItem
+            onSubmit={handleEditItem}
+            closeModal={closeForm}
+            defaultValue={editData}
+          />
+        )}
       </div>
 
       <UploadModal

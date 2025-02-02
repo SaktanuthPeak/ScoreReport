@@ -31,22 +31,16 @@ export default function ShowReportT(props) {
     {
       title: "Action",
       key: "action",
-      hidden: true,
+      hidden: false,
       render: (transaction) => (
         <Space size="middle">
           <Button
+            type="primary"
             onClick={() => {
               props.onRowEdit(transaction);
             }}
           >
             edit
-          </Button>
-          <Button
-            onClick={() => {
-              props.onRowDeleted(transaction.id);
-            }}
-          >
-            delete
           </Button>
         </Space>
       ),
