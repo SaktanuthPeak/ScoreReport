@@ -64,16 +64,16 @@ const AdminNavbar = () => {
         breakpoint="lg"
         collapsedWidth="0"
         onBreakpoint={(broken) => {
-          console.log(broken);
+
         }}
         onCollapse={(collapsed, type) => {
-          console.log(collapsed, type);
+
         }}
         style={{ minHeight: "100vh" }}
       >
         <div
           className="demo-logo-vertical"
-          // style={{ display: "flex", flexDirection: "row" }}
+        // style={{ display: "flex", flexDirection: "row" }}
         />
 
         <Menu

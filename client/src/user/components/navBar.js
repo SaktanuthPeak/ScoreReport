@@ -64,10 +64,10 @@ const StudentNavbar = () => {
         breakpoint="lg"
         collapsedWidth="0"
         onBreakpoint={(broken) => {
-          console.log(broken);
+
         }}
         onCollapse={(collapsed, type) => {
-          console.log(collapsed, type);
+
         }}
         style={{ minHeight: "100vh" }}
       >

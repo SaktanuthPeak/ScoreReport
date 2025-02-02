@@ -87,7 +87,7 @@ const AdminDashBoard = () => {
       setLoading(false);
 
     } catch (error) {
-      console.log("This is error", error);
+
       setLoading(false);
     }
   };

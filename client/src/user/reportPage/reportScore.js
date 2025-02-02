@@ -43,7 +43,6 @@ const ReportScore = () => {
         );
         const data = courseData.data.data[0];
         const scoreData = data.scores;
-        console.log(data.title);
 
         setCurrentCourse(data);
         setCurrentUser(userData);

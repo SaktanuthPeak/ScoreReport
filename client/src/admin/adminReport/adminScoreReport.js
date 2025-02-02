@@ -108,7 +108,7 @@ const AdminScoreReport = () => {
 
   const fetchStudentData = async () => {
     if (!userName || userName.length === 0) {
-      console.log("Waiting for userName data...");
+
       return;
     }
     try {
@@ -163,7 +163,7 @@ const AdminScoreReport = () => {
   const handleSearchBarChange = (selectedOptions) => {
     const usernames = selectedOptions.map((option) => option.value);
     setSelectedUsers(usernames);
-    console.log("Selected usernames updated:", usernames);
+
   };
 
   const fetchSelectedUsersData = useCallback(async () => {
@@ -224,7 +224,7 @@ const AdminScoreReport = () => {
       payload.homeworkScore = item.homeworkScore;
       payload.MidtermScore = item.MidtermScore;
       payload.FinalScore = item.FinalScore;
-      console.log("++++++++++++++++++++", payload);
+
       const response = await ax.put(`/scores/${item.documentId}`, {
         data: payload,
       });
@@ -235,7 +235,7 @@ const AdminScoreReport = () => {
         { id: id, key: id, ...attributes },
       ]);
     } catch (err) {
-      console.log(err);
+
     } finally {
       setLoading(false);
     }

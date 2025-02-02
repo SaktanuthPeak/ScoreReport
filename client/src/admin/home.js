@@ -23,7 +23,7 @@ const AdminHomePage = () => {
         setCourses(subjectData);
         setFilteredCourses(subjectData);
       } catch (error) {
-        console.log("this is error", error);
+
       }
     };
     fetchCourses();

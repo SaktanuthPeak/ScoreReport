@@ -104,7 +104,7 @@ const loadPersistedJwt = async (callback) => {
             }
         }
     } catch (e) {
-        console.log(e)
+
         callback(new Error('Fail to initiate auto login'))
     }
 }
