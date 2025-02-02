@@ -79,7 +79,7 @@ function DebounceSelect({ fetchOptions, debounceTimeout = 800, ...props }) {
 }
 
 async function fetchUserList(username) {
-  console.log("Fetching users:", username);
+
   return ax
     .get(`/users?search=${username}`)
     .then((response) => response.data)
@@ -108,7 +108,7 @@ const SearchBar = ({ onChange }) => {
     setSelectedUsers(newValue || []);
 
     const selectedUsernames = (newValue || []).map((option) => option.value);
-    console.log("Selected usernames:", selectedUsernames);
+
 
     if (onChange) {
       onChange(newValue || []);

@@ -3,7 +3,7 @@ import { Button, Form, Select, Input, InputNumber, Modal } from "antd";
 
 const EditOnRowItem = ({ defaultValue, onSubmit, closeModal }) => {
   const [form] = Form.useForm();
-  console.log(defaultValue);
+
   useEffect(() => {
     form.setFieldsValue({
       id: defaultValue.id,
@@ -22,7 +22,7 @@ const EditOnRowItem = ({ defaultValue, onSubmit, closeModal }) => {
         ...defaultValue,
         ...values,
       };
-      console.log("Updated Record:", updatedValue);
+
       onSubmit(updatedValue);
       closeModal();
     });
@@ -30,7 +30,7 @@ const EditOnRowItem = ({ defaultValue, onSubmit, closeModal }) => {
 
   return (
     <Modal
-      title="Edit transaction"
+      title="เเก้ไขคะเเนน"
       open={true}
       onCancel={closeModal}
       footer={[

@@ -85,7 +85,7 @@ const AdminDashBoard = () => {
       setCourseData(coursesData);
       setScoreData(mappedData);
       setLoading(false);
-      console.log(mappedData);
+
     } catch (error) {
       console.log("This is error", error);
       setLoading(false);

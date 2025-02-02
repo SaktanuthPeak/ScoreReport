@@ -73,7 +73,7 @@ const StudentNavbar = () => {
       >
         <div
           className="demo-logo-vertical"
-          // style={{ display: "flex", flexDirection: "row" }}
+        // style={{ display: "flex", flexDirection: "row" }}
         />
 
         <Menu

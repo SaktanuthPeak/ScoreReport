@@ -9,6 +9,16 @@ export default function ShowReportT(props) {
       key: "UID",
     },
     {
+      title: "ชื่อ",
+      dataIndex: "firstname",
+      key: "firstname",
+    },
+    {
+      title: "นามสกุล",
+      dataIndex: "lastname",
+      key: "lastname",
+    },
+    {
       title: "Quiz (20%)",
       dataIndex: "Quiz1",
       key: "Quiz1",

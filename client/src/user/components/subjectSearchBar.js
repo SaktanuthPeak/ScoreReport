@@ -99,7 +99,7 @@ const SubjectSearchBar = ({ onChange }) => {
         setSelectedUsers(newValue || []);
 
         const selectedUsernames = (newValue || []).map((option) => option.value);
-        console.log("Selected usernames:", selectedUsernames);
+
 
         if (onChange) {
             onChange(newValue || []);

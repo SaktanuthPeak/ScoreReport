@@ -18,7 +18,7 @@ const Dashboard = () => {
             try {
                 const subject = await ax.get("/subjects?populate=*");
                 const titles = subject.data.data.map(item => item.title);
-                console.log('subject list =>>>>>', titles)
+
                 const subjectData = subject.data.data;
                 setCourses(subjectData);
                 setFilteredCourses(subjectData);

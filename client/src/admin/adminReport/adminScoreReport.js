@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   Card,
   Row,
@@ -76,34 +76,73 @@ const AdminScoreReport = () => {
   const [userData, setUserData] = useState([]);
   const [editData, setEditData] = useState([]);
   const [openEditForm, setOpenEditForm] = useState(false);
+  const [userName, setUserName] = useState(null);
   const { token } = theme.useToken();
   const { courseId } = useParams();
   const navigate = useNavigate();
 
+
+  const fetchStudentName = async () => {
+    try {
+      const userResponse = await ax.get(`/users`);
+      const users = userResponse.data.map(user => ({
+        UID: user.UID,
+        firstname: user.firstname,
+        lastname: user.lastname
+      }));
+      setUserName(users);
+    } catch (error) {
+      console.error("Error fetching user names:", error);
+      message.error("Failed to fetch student names.");
+    }
+  };
+  useEffect(() => {
+    fetchStudentName();
+  }, []);
+
+  useEffect(() => {
+    if (userName && userName.length > 0) {
+      fetchStudentData();
+    }
+  }, [userName]);
+
   const fetchStudentData = async () => {
+    if (!userName || userName.length === 0) {
+      console.log("Waiting for userName data...");
+      return;
+    }
     try {
       const courseResponse = await ax.get(`/subjects/${courseId}?populate=*`);
+
       const course = courseResponse.data.data;
-      console.log("Course data:", course);
+
       setCourseData(course);
 
-      const students = course.scores;
-      setStudents(students);
 
-      setTransactionData(
-        students
-          .map((student) => ({
+      setStudents(course.scores);
+
+
+
+      const mergedData = course.scores
+        .filter(student => student.UID)
+        .map(student => {
+          const user = userName.find(u => u.UID === student.UID);
+          return {
             documentId: student.documentId,
             id: student.id,
             key: student.id,
+            firstname: user ? user.firstname : "N/A",
+            lastname: user ? user.lastname : "N/A",
             UID: student.UID,
             Quiz1: student.Quiz1,
             homeworkScore: student.homeworkScore,
             MidtermScore: student.MidtermScore,
-            FinalScore: student.FinalScore,
-          }))
-          .sort((a, b) => a.UID.localeCompare(b.UID))
-      );
+            FinalScore: student.FinalScore
+          };
+        }).sort((a, b) => a.UID.localeCompare(b.UID));;
+
+
+      setTransactionData(mergedData);
 
       setLoading(false);
     } catch (error) {
@@ -111,6 +150,10 @@ const AdminScoreReport = () => {
       setLoading(false);
     }
   };
+  useEffect(() => {
+    fetchStudentName();
+  }, []);
+
 
   const handleCardClick = (scoreType) => {
     setCurrentScoreType(scoreType);
@@ -123,39 +166,42 @@ const AdminScoreReport = () => {
     console.log("Selected usernames updated:", usernames);
   };
 
-  const fetchSelectedUsersData = async () => {
-    if (selectedUsers.length === 0) {
-      message.warning("No users selected.");
+  const fetchSelectedUsersData = useCallback(async () => {
+    if (!selectedUsers.length) {
+      message.warning("No users selected");
       return;
     }
 
-    console.log("Submitting selected usernames:", selectedUsers);
-
     try {
       setLoading(true);
-      setTransactionData(
-        students
-          .map((student) => ({
+      const filteredData = students
+        .map(student => {
+          const user = userName.find(u => u.UID === student.UID);
+          return {
             documentId: student.documentId,
             id: student.id,
             key: student.id,
             UID: student.UID,
+            lastname: user?.lastname ?? "N/A",
+            firstname: user?.firstname ?? "N/A",
             Quiz1: student.Quiz1,
             homeworkScore: student.homeworkScore,
             MidtermScore: student.MidtermScore,
             FinalScore: student.FinalScore,
-          }))
-          .filter((student) => selectedUsers.includes(student.UID))
-          .sort((a, b) => a.UID.localeCompare(b.UID))
-      );
+          };
+        })
+        .filter(student => selectedUsers.includes(student.UID))
+        .sort((a, b) => a.UID.localeCompare(b.UID));
+
+      setTransactionData(filteredData);
       message.success("User data fetched successfully!");
     } catch (error) {
-      console.error("Error fetching user data:", error);
-      message.error("Failed to fetch user data.");
+      console.error("Error fetching selected user data:", error);
+      message.error("Failed to fetch selected user data");
     } finally {
       setLoading(false);
     }
-  };
+  }, [students, userName, selectedUsers]);
 
   useEffect(() => {
     fetchStudentData();
