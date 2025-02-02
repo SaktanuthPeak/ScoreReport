@@ -1,13 +1,8 @@
 import React, { useState, useEffect } from "react";
-import dayjs from "dayjs";
-import axios from "axios";
 import { Layout } from "antd";
-import { UserOutlined } from "@ant-design/icons";
-import { Avatar, Space, Button, Flex, Form, Modal } from "antd";
-import { Checkbox, Input } from "antd";
-import { useLocation } from "react-router-dom";
+import { Button, Form, Modal } from "antd";
+import { Input } from "antd";
 
-const { Header, Content, Footer, Sider } = Layout;
 const EditProfile = ({ defaultValue, onSubmit, closeForm }) => {
   const [form] = Form.useForm();
 

@@ -3,15 +3,11 @@ import React, { useState } from "react";
 import {
   DesktopOutlined,
   FileOutlined,
-  PieChartOutlined,
-  TeamOutlined,
   UserOutlined,
   HomeOutlined,
   ApiOutlined,
-  ReconciliationOutlined,
 } from "@ant-design/icons";
-import { Avatar, Space } from "antd";
-import { Breadcrumb, Flex, Layout, Menu, theme } from "antd";
+import { Layout, Menu } from "antd";
 
 const { Header, Content, Footer, Sider } = Layout;
 function getItem(label, key, icon, children) {
@@ -41,13 +37,6 @@ const StudentNavbar = () => {
         <UserOutlined style={{ marginRight: "10px" }} />
         Student Profile
       </Link>
-    ),
-    getItem(
-      <Link to="/student-home/dashboard">
-        <DesktopOutlined style={{ marginRight: "10px" }} />
-        Dashboard
-      </Link>,
-      <FileOutlined />
     ),
 
     getItem(

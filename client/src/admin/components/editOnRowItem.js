@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Button, Form, Select, Input, InputNumber, Modal } from "antd";
+import { Button, Form, Input, InputNumber, Modal } from "antd";
 
 const EditOnRowItem = ({ defaultValue, onSubmit, closeModal }) => {
   const [form] = Form.useForm();

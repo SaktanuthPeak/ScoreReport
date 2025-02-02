@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Card, Row, Col, Tag, Button } from "antd";
 import "./admin.css";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { SearchOutlined } from '@ant-design/icons';
 import ax from "../conf/ax";
 import SubjectSearchBar from "./components/subjectSearchBar";

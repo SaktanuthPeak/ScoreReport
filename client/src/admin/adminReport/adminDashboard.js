@@ -1,7 +1,7 @@
 import React, { use, useEffect, useState } from "react";
-import { Card, Row, Col, Tag, Flex, Select, Button } from "antd";
+import { Flex, Select } from "antd";
 import ax from "../../conf/ax";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import "chart.js/auto";
 import { Bar } from "react-chartjs-2";
 

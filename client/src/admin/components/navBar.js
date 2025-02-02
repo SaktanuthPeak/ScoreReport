@@ -3,17 +3,12 @@ import React, { useState } from "react";
 import {
   DesktopOutlined,
   FileOutlined,
-  PieChartOutlined,
-  TeamOutlined,
   UserOutlined,
-  HomeOutlined,
   ApiOutlined,
-  ReconciliationOutlined,
 } from "@ant-design/icons";
-import { Avatar, Space } from "antd";
-import { Breadcrumb, Flex, Layout, Menu, theme } from "antd";
+import { Layout, Menu } from "antd";
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Sider } = Layout;
 function getItem(label, key, icon, children) {
   return {
     key,
@@ -63,12 +58,7 @@ const AdminNavbar = () => {
       <Sider
         breakpoint="lg"
         collapsedWidth="0"
-        onBreakpoint={(broken) => {
 
-        }}
-        onCollapse={(collapsed, type) => {
-
-        }}
         style={{ minHeight: "100vh" }}
       >
         <div

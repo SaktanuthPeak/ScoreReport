@@ -3,7 +3,6 @@ import { Modal, Button, Upload, message } from "antd";
 import { InboxOutlined } from "@ant-design/icons";
 import * as XLSX from "xlsx";
 import ax from "../../conf/ax";
-import { useParams } from "react-router-dom";
 
 const { Dragger } = Upload;
 

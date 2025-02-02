@@ -6,8 +6,6 @@ import {
   Typography,
   Button,
   message,
-  Space,
-  Layout,
   theme,
 } from "antd";
 import ax from "../../conf/ax";
@@ -73,11 +71,9 @@ const AdminScoreReport = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [currentScoreType, setCurrentScoreType] = useState("");
   const [selectedUsers, setSelectedUsers] = useState([]);
-  const [userData, setUserData] = useState([]);
   const [editData, setEditData] = useState([]);
   const [openEditForm, setOpenEditForm] = useState(false);
   const [userName, setUserName] = useState(null);
-  const { token } = theme.useToken();
   const { courseId } = useParams();
   const navigate = useNavigate();
 
